@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-08-04T05:40:32.483Z",
-  "totalPosts": 2,
+  "generatedAt": "2026-08-04T05:48:24.117Z",
+  "totalPosts": 3,
   "totalTags": 2,
-  "totalCategories": 1,
+  "totalCategories": 2,
   "skills": [
     {
       "name": "测试",
@@ -20,18 +20,23 @@
       "name": "测试",
       "count": 2,
       "score": 100
+    },
+    {
+      "name": "博客",
+      "count": 1,
+      "score": 50
     }
   ],
   "heatmap": [
     {
       "date": "2026-08-04",
-      "count": 2
+      "count": 3
     }
   ],
   "months": [
     {
       "month": "2026-08",
-      "count": 2
+      "count": 3
     }
   ]
 }
