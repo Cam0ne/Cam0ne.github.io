@@ -1,0 +1,589 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Markdown语法大全 | Camer's blog</title><meta name="author" content="Camer"><meta name="copyright" content="Camer"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="1. 标题 # 一级标题  二级标题三级标题四级标题五级标题六级标题 效果： 一级标题 二级标题 三级标题  2. 字体 加粗 **加粗文字**  效果： 加粗文字 斜体 *斜体文字*  效果： 斜体文字 加粗斜体 ***加粗斜体***  效果： 加粗斜体 删除线 ~~删除文字~~  效果： 删除文字  3. 分割线 ---     效果：   4. 引用 一级引用 &gt; 这是引用内容  效果">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Markdown语法大全">
+<meta property="og:url" content="https://cam0ne.github.io/2026/08/04/mweb-17858155443606/index.html">
+<meta property="og:site_name" content="Camer&#39;s blog">
+<meta property="og:description" content="1. 标题 # 一级标题  二级标题三级标题四级标题五级标题六级标题 效果： 一级标题 二级标题 三级标题  2. 字体 加粗 **加粗文字**  效果： 加粗文字 斜体 *斜体文字*  效果： 斜体文字 加粗斜体 ***加粗斜体***  效果： 加粗斜体 删除线 ~~删除文字~~  效果： 删除文字  3. 分割线 ---     效果：   4. 引用 一级引用 &gt; 这是引用内容  效果">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cam0ne.github.io/img/camer.jpg">
+<meta property="article:published_time" content="2026-08-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-04T03:54:16.431Z">
+<meta property="article:author" content="Camer">
+<meta property="article:tag" content="MWeb">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cam0ne.github.io/img/camer.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Markdown语法大全",
+  "url": "https://cam0ne.github.io/2026/08/04/mweb-17858155443606/",
+  "image": "https://cam0ne.github.io/img/camer.jpg",
+  "datePublished": "2026-08-03T16:00:00.000Z",
+  "dateModified": "2026-08-04T03:54:16.431Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Camer",
+      "url": "https://Cam0ne.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/husky.png?v=3"><link rel="canonical" href="https://cam0ne.github.io/2026/08/04/mweb-17858155443606/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Markdown语法大全',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/profile-panel.css?v=6"><link rel="stylesheet" href="/css/site-dark.css?v=5"><meta name="generator" content="Hexo 7.3.0"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/safe3.webp?v=1);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/camer.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-id-card"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/safe2.webp?v=1);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/husky.png?v=3" alt="Logo"><span class="site-name">Camer's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">Markdown语法大全</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-id-card"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Markdown语法大全</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-08-03T16:00:00.000Z" title="发表于 2026-08-04 00:00:00">2026-08-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-04T03:54:16.431Z" title="更新于 2026-08-04 11:54:16">2026-08-04</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/MWeb/">MWeb</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2><a id="1%E6%A0%87%E9%A2%98" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. 标题</h2>
+<pre class="line-numbers"><code class="language-markdown"># 一级标题
+
+<h2 id="二级标题"><a href="#二级标题" class="headerlink" title="二级标题"></a>二级标题</h2><h3 id="三级标题"><a href="#三级标题" class="headerlink" title="三级标题"></a>三级标题</h3><h4 id="四级标题"><a href="#四级标题" class="headerlink" title="四级标题"></a>四级标题</h4><h5 id="五级标题"><a href="#五级标题" class="headerlink" title="五级标题"></a>五级标题</h5><h6 id="六级标题"><a href="#六级标题" class="headerlink" title="六级标题"></a>六级标题</h6><p></code></pre></p>
+<p>效果：</p>
+<h1><a id="%E4%B8%80%E7%BA%A7%E6%A0%87%E9%A2%98" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>一级标题</h1>
+<h2><a id="%E4%BA%8C%E7%BA%A7%E6%A0%87%E9%A2%98" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>二级标题</h2>
+<h3><a id="%E4%B8%89%E7%BA%A7%E6%A0%87%E9%A2%98" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>三级标题</h3>
+<hr>
+<h1><a id="2%E5%AD%97%E4%BD%93" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. 字体</h1>
+<h2><a id="%E5%8A%A0%E7%B2%97" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>加粗</h2>
+<pre class="line-numbers"><code class="language-markdown">**加粗文字**
+</code></pre>
+<p>效果：</p>
+<p><strong>加粗文字</strong></p>
+<h2><a id="%E6%96%9C%E4%BD%93" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>斜体</h2>
+<pre class="line-numbers"><code class="language-markdown">*斜体文字*
+</code></pre>
+<p>效果：</p>
+<p><em>斜体文字</em></p>
+<h2><a id="%E5%8A%A0%E7%B2%97%E6%96%9C%E4%BD%93" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>加粗斜体</h2>
+<pre class="line-numbers"><code class="language-markdown">***加粗斜体***
+</code></pre>
+<p>效果：</p>
+<p><em><strong>加粗斜体</strong></em></p>
+<h2><a id="%E5%88%A0%E9%99%A4%E7%BA%BF" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>删除线</h2>
+<pre class="line-numbers"><code class="language-markdown">~~删除文字~~
+</code></pre>
+<p>效果：</p>
+<p><del>删除文字</del></p>
+<hr>
+<h1><a id="3%E5%88%86%E5%89%B2%E7%BA%BF" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. 分割线</h1>
+<pre class="line-numbers"><code class="language-markdown">---
+
+<hr>
+<hr>
+<p></code></pre></p>
+<p>效果：</p>
+<hr>
+<hr>
+<h1><a id="4%E5%BC%95%E7%94%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. 引用</h1>
+<h2><a id="%E4%B8%80%E7%BA%A7%E5%BC%95%E7%94%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>一级引用</h2>
+<pre class="line-numbers"><code class="language-markdown">&gt; 这是引用内容
+</code></pre>
+<p>效果：</p>
+<blockquote>
+<p>这是引用内容</p>
+</blockquote>
+<h2><a id="%E5%A4%9A%E7%BA%A7%E5%BC%95%E7%94%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>多级引用</h2>
+<pre class="line-numbers"><code class="language-markdown">&gt; 一级引用
+&gt;
+&gt;&gt; 二级引用
+&gt;&gt;
+&gt;&gt;&gt; 三级引用
+</code></pre>
+<hr>
+<h1><a id="5%E5%88%97%E8%A1%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>5. 列表</h1>
+<h2><a id="%E6%97%A0%E5%BA%8F%E5%88%97%E8%A1%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>无序列表</h2>
+<pre class="line-numbers"><code class="language-markdown">- 苹果
+- 香蕉
+- 西瓜
+</code></pre>
+<p>效果：</p>
+<ul>
+<li>苹果</li>
+<li>香蕉</li>
+<li>西瓜</li>
+</ul>
+<h2><a id="%E5%A4%9A%E7%BA%A7%E5%88%97%E8%A1%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>多级列表</h2>
+<pre class="line-numbers"><code class="language-markdown">- 一级
+
+<ul>
+<li><p>二级</p>
+<ul>
+<li>三级</li>
+</ul>
+</li>
+</ul>
+<p></code></pre></p>
+<h2><a id="%E6%9C%89%E5%BA%8F%E5%88%97%E8%A1%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>有序列表</h2>
+<pre class="line-numbers"><code class="language-markdown">1. 第一项
+2. 第二项
+3. 第三项
+</code></pre>
+<h2><a id="%E6%B7%B7%E5%90%88%E5%88%97%E8%A1%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>混合列表</h2>
+<pre class="line-numbers"><code class="language-markdown">1. Linux
+
+<ul>
+<li>Ubuntu</li>
+<li>CentOS</li>
+</ul>
+<ol start="2">
+<li><p>Windows</p>
+<ul>
+<li>Windows10</li>
+<li>Windows11</li>
+</ul>
+</li>
+</ol>
+<p></code></pre></p>
+<hr>
+<h1><a id="6%E4%BB%BB%E5%8A%A1%E5%88%97%E8%A1%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>6. 任务列表</h1>
+<pre class="line-numbers"><code class="language-markdown">- [x] 完成安装
+- [ ] 配置环境
+- [ ] 发布博客
+</code></pre>
+<p>效果：</p>
+<ul>
+<li class="task-list-item"><input type="checkbox" checked="" disabled=""> 完成安装</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> 配置环境</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> 发布博客</li>
+</ul>
+<hr>
+<h1><a id="7%E9%93%BE%E6%8E%A5" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>7. 链接</h1>
+<h2><a id="%E6%99%AE%E9%80%9A%E9%93%BE%E6%8E%A5" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>普通链接</h2>
+<pre class="line-numbers"><code class="language-markdown">[百度](https://www.baidu.com)
+</code></pre>
+<h2><a id="%E8%87%AA%E5%8A%A8%E9%93%BE%E6%8E%A5" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>自动链接</h2>
+<pre class="line-numbers"><code class="language-markdown">&lt;https://www.baidu.com&gt;
+</code></pre>
+<hr>
+<h1><a id="8%E5%9B%BE%E7%89%87" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>8. 图片</h1>
+<pre class="line-numbers"><code class="language-markdown">![图片名称](图片地址)
+</code></pre>
+<p>示例：</p>
+<pre class="line-numbers"><code class="language-markdown">![Markdown](https://markdown-here.com/img/icon256.png)
+</code></pre>
+<hr>
+<h1><a id="9%E8%A1%A8%E6%A0%BC" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>9. 表格</h1>
+<h2><a id="%E6%99%AE%E9%80%9A%E8%A1%A8%E6%A0%BC" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>普通表格</h2>
+<pre class="line-numbers"><code class="language-markdown">| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| CPU | 硬件 | 处理器 |
+| GPU | 硬件 | 显卡 |
+</code></pre>
+<p>效果：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>硬件</td>
+<td>处理器</td>
+</tr>
+<tr>
+<td>GPU</td>
+<td>硬件</td>
+<td>显卡</td>
+</tr>
+</tbody>
+</table>
+<h2><a id="%E5%AF%B9%E9%BD%90%E8%A1%A8%E6%A0%BC" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>对齐表格</h2>
+<pre class="line-numbers"><code class="language-markdown">| 参数 | 值 |
+| :--- | ---: |
+| CPU | 32核 |
+| 内存 | 128G |
+</code></pre>
+<p>效果：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left">参数</th>
+<th style="text-align: right">值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left">CPU</td>
+<td style="text-align: right">32核</td>
+</tr>
+<tr>
+<td style="text-align: left">内存</td>
+<td style="text-align: right">128G</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h1><a id="10%E4%BB%A3%E7%A0%81" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>10. 代码</h1>
+<h2><a id="%E8%A1%8C%E5%86%85%E4%BB%A3%E7%A0%81" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>行内代码</h2>
+<pre class="line-numbers"><code class="language-markdown">使用 `docker ps` 查看容器
+</code></pre>
+<p>效果：</p>
+<p>使用 <code>docker ps</code> 查看容器</p>
+<h2><a id="%E4%BB%A3%E7%A0%81%E5%9D%97" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>代码块</h2>
+<pre class="line-numbers"><code class="language-bash">docker ps
+
+<p>docker images<br></code></pre></p>
+<p>支持：</p>
+<pre class="line-numbers"><code class="language-text">bash
+python
+java
+javascript
+json
+yaml
+sql
+dockerfile
+xml
+nginx
+</code></pre>
+<hr>
+<h1><a id="11-json%E7%A4%BA%E4%BE%8B" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>11. JSON示例</h1>
+<pre class="line-numbers"><code class="language-json">&#123;
+  "name": "ChatGPT",
+  "version": "1.0",
+  "enabled": true
+&#125;
+</code></pre>
+<hr>
+<h1><a id="12-yaml%E7%A4%BA%E4%BE%8B" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>12. YAML示例</h1>
+<pre class="line-numbers"><code class="language-yaml">server:
+  port: 8080
+
+<p>database:<br>  host: localhost<br>  username: root<br></code></pre></p>
+<hr>
+<h1><a id="13-python%E7%A4%BA%E4%BE%8B" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>13. Python示例</h1>
+<pre class="line-numbers"><code class="language-python">def hello():
+    print("Hello Markdown")
+    
+<p>hello()<br></code></pre></p>
+<hr>
+<h1><a id="14-latex%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>14. LaTeX数学公式</h1>
+<h2><a id="%E8%A1%8C%E5%86%85%E5%85%AC%E5%BC%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>行内公式</h2>
+<pre class="line-numbers"><code class="language-markdown">$a+b=c$
+</code></pre>
+<h2><a id="%E7%8B%AC%E7%AB%8B%E5%85%AC%E5%BC%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>独立公式</h2>
+<pre class="line-numbers"><code class="language-markdown">$$
+E=mc^2
+$$
+</code></pre>
+<h2><a id="%E5%A4%8D%E6%9D%82%E5%85%AC%E5%BC%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>复杂公式</h2>
+<pre class="line-numbers"><code class="language-markdown">$$
+\frac&#123;-b\pm\sqrt&#123;b^2-4ac&#125;&#125;&#123;2a&#125;
+$$
+</code></pre>
+<hr>
+<h1><a id="15-html" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>15. HTML</h1>
+<h2><a id="%E4%B8%8B%E5%88%92%E7%BA%BF" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>下划线</h2>
+<pre class="line-numbers"><code class="language-html">&lt;u&gt;下划线文字&lt;/u&gt;
+</code></pre>
+<h2><a id="%E9%A2%9C%E8%89%B2" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>颜色</h2>
+<pre class="line-numbers"><code class="language-html">&lt;span style="color:red"&gt;
+红色文字
+&lt;/span&gt;
+</code></pre>
+<h2><a id="%E5%B1%85%E4%B8%AD" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>居中</h2>
+<pre class="line-numbers"><code class="language-html">&lt;center&gt;
+居中文字
+&lt;/center&gt;
+</code></pre>
+<hr>
+<h1><a id="16%E6%8A%98%E5%8F%A0%E5%86%85%E5%AE%B9" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>16. 折叠内容</h1>
+<pre class="line-numbers"><code class="language-html">&lt;details&gt;
+
+<p>&lt;summary&gt;<br>点击展开<br>&lt;&#x2F;summary&gt;</p>
+<p>这里是隐藏内容</p>
+<p>&lt;&#x2F;details&gt;<br></code></pre></p>
+<p>效果：</p>
+<details>
+<summary>
+点击展开
+</summary>
+<p>这里是隐藏内容</p>
+</details>
+<hr>
+<h1><a id="17-emoji" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>17. Emoji</h1>
+<pre class="line-numbers"><code class="language-markdown">🚀 发布
+
+<p>🔥 热门</p>
+<p>⚠️ 警告</p>
+<p>✅ 完成</p>
+<p>❌ 错误</p>
+<p>📌 注意<br></code></pre></p>
+<hr>
+<h1><a id="18-mermaid%E6%B5%81%E7%A8%8B%E5%9B%BE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>18. Mermaid流程图</h1>
+<pre class="line-numbers"><code class="language-mermaid">flowchart LR
+
+<p>A[用户] –&gt; B[API网关]</p>
+<p>B –&gt; C[AI模型]</p>
+<p>C –&gt; D[返回结果]<br></code></pre></p>
+<hr>
+<h1><a id="19-mermaid%E6%97%B6%E5%BA%8F%E5%9B%BE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>19. Mermaid时序图</h1>
+<pre class="line-numbers"><code class="language-mermaid">sequenceDiagram
+
+<p>用户-&gt;&gt;网关: 请求</p>
+<p>网关-&gt;&gt;模型: 转发</p>
+<p>模型–&gt;&gt;网关: 返回</p>
+<p>网关–&gt;&gt;用户: 响应<br></code></pre></p>
+<hr>
+<h1><a id="20-mermaid%E6%9E%B6%E6%9E%84%E5%9B%BE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>20. Mermaid架构图</h1>
+<pre class="line-numbers"><code class="language-mermaid">graph TD
+
+<p>A[客户端]</p>
+<p>B[安全网关]</p>
+<p>C[AI模型]</p>
+<p>D[数据库]</p>
+<p>A –&gt; B</p>
+<p>B –&gt; C</p>
+<p>B –&gt; D<br></code></pre></p>
+<hr>
+<h1><a id="21%E8%84%9A%E6%B3%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>21. 脚注</h1>
+<pre class="line-numbers"><code class="language-markdown">这里是一句话说明[^1]
+
+
+<p></code></pre></p>
+<hr>
+<h1><a id="22%E9%94%9A%E7%82%B9%E8%B7%B3%E8%BD%AC" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>22. 锚点跳转</h1>
+<p>定义：</p>
+<pre class="line-numbers"><code class="language-html">&lt;a name="top"&gt;&lt;/a&gt;
+</code></pre>
+<p>跳转：</p>
+<pre class="line-numbers"><code class="language-markdown">[返回顶部](#top)
+</code></pre>
+<hr>
+<h1><a id="23%E9%94%AE%E7%9B%98%E6%8C%89%E9%94%AE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>23. 键盘按键</h1>
+<pre class="line-numbers"><code class="language-html">&lt;kbd&gt;Ctrl&lt;/kbd&gt; + &lt;kbd&gt;C&lt;/kbd&gt;
+</code></pre>
+<p>效果：</p>
+<p><kbd>Ctrl</kbd> + <kbd>C</kbd></p>
+<hr>
+<h1><a id="24%E6%8F%90%E7%A4%BA%E5%9D%97" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>24. 提示块</h1>
+<p>部分编辑器支持：</p>
+<pre class="line-numbers"><code class="language-markdown">&gt; [!NOTE]
+&gt; 注意内容
+
+
+<p>&gt; [!WARNING]<br>&gt; 警告内容</p>
+<h2 id="TIP-技巧内容25-Hexo文章模板-title-我的技术文章date-2026-08-04categories-技术tags-Docker-Linuxcover-images-demo-png"><a href="#TIP-技巧内容25-Hexo文章模板-title-我的技术文章date-2026-08-04categories-技术tags-Docker-Linuxcover-images-demo-png" class="headerlink" title="&gt; [!TIP]&gt; 技巧内容25. Hexo文章模板---title: 我的技术文章date: 2026-08-04categories:  - 技术tags:  - Docker  - Linuxcover: /images/demo.png"></a>&gt; [!TIP]<br>&gt; 技巧内容<br></code></pre><br><hr><br><h1><a id="25-hexo%E6%96%87%E7%AB%A0%E6%A8%A1%E6%9D%BF" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>25. Hexo文章模板</h1><br><pre class="line-numbers"><code class="language-yaml">---<br>title: 我的技术文章<br>date: 2026-08-04<br>categories:<br>  - 技术<br>tags:<br>  - Docker<br>  - Linux<br>cover: /images/demo.png</h2><h1 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>文章说明。</p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><table>
+<thead>
+<tr>
+<th>软件</th>
+<th>版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ubuntu</td>
+<td>24.04</td>
+</tr>
+<tr>
+<td>Docker</td>
+<td>28.0</td>
+</tr>
+</tbody></table>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><pre><code class="bash">docker pull nginx
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;&lt;a id=&quot;%E6%9E%B6%E6%9E%84&quot; class=&quot;anchor&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;octicon octicon-link&quot;&gt;&lt;/span&gt;&lt;/a&gt;架构&lt;/h2&gt;
+&lt;pre class=&quot;line-numbers&quot;&gt;&lt;code class=&quot;language-mermaid&quot;&gt;flowchart LR
+
+A--&amp;gt;B--&amp;gt;C
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;&lt;a id=&quot;%E6%80%BB%E7%BB%93&quot; class=&quot;anchor&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;octicon octicon-link&quot;&gt;&lt;/span&gt;&lt;/a&gt;总结&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;优点&lt;/li&gt;
+&lt;li&gt;缺点&lt;/li&gt;
+&lt;li&gt;注意事项&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&quot;line-numbers&quot;&gt;&lt;code class=&quot;language-plain_text&quot;&gt;
+
+---
+
+# 常用快捷符号
+
+
+| 功能 | Markdown |
+|-|-|
+| 标题 | `#` |
+| 加粗 | `**文字**` |
+| 斜体 | `*文字*` |
+| 删除 | `~~文字~~` |
+| 引用 | `&amp;gt;` |
+| 列表 | `-` |
+| 代码 | `` `代码` `` |
+| 链接 | `[名称](URL)` |
+| 图片 | `![名称](URL)` |
+| 表格 | `|---|` |
+| 分割线 | `---` |
+| 任务 | `- [ ]` |
+&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
+</article><div class="post-copyright post-disclaimer"><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-info fa-fw"></i>免责声明: </span><span class="post-copyright-info">本站内容仅用于知识分享与安全研究交流。任何人不得将本文内容用于违法违规用途；由此产生的任何后果均与作者本人无关。请在合法授权环境中学习、验证与使用相关知识。</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/MWeb/">MWeb</a></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/08/04/mweb-17858042778995/" title="这是一个测试网站"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">这是一个测试网站</div></div><div class="info-2"><div class="info-item-1">11 1212312 22 12312312 </div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/08/04/mweb-17858042778995/" title="这是一个测试网站"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-04</div><div class="info-item-2">这是一个测试网站</div></div><div class="info-2"><div class="info-item-1">11 1212312 22 12312312 </div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/camer.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Camer</div><div class="author-info-description">专注研究网络安全、逆向分析、应急响应、代码编程、二进制研究</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">1. 标题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BA%A7%E6%A0%87%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">二级标题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E7%BA%A7%E6%A0%87%E9%A2%98"><span class="toc-number">2.1.</span> <span class="toc-text">三级标题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%9B%E7%BA%A7%E6%A0%87%E9%A2%98"><span class="toc-number">2.1.1.</span> <span class="toc-text">四级标题</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%94%E7%BA%A7%E6%A0%87%E9%A2%98"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">五级标题</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%85%AD%E7%BA%A7%E6%A0%87%E9%A2%98"><span class="toc-number">2.1.1.1.1.</span> <span class="toc-text">六级标题</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">一级标题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">二级标题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">1.1.</span> <span class="toc-text">三级标题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">2. 字体</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">加粗</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">斜体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">加粗斜体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">删除线</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">3. 分割线</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">4. 引用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">一级引用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">多级引用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">5. 列表</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">无序列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">多级列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">有序列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">混合列表</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">6. 任务列表</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">7. 链接</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">普通链接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">自动链接</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">8. 图片</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">9. 表格</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">普通表格</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">对齐表格</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">10. 代码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">行内代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">代码块</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">11. JSON示例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">12. YAML示例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">13. Python示例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">14. LaTeX数学公式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">行内公式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">独立公式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">复杂公式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">15. HTML</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">下划线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">颜色</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">居中</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">16. 折叠内容</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">17. Emoji</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">18. Mermaid流程图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">19. Mermaid时序图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">20. Mermaid架构图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">21. 脚注</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">22. 锚点跳转</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">23. 键盘按键</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">24. 提示块</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#TIP-%E6%8A%80%E5%B7%A7%E5%86%85%E5%AE%B925-Hexo%E6%96%87%E7%AB%A0%E6%A8%A1%E6%9D%BF-title-%E6%88%91%E7%9A%84%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0date-2026-08-04categories-%E6%8A%80%E6%9C%AFtags-Docker-Linuxcover-images-demo-png"><span class="toc-number">1.</span> <span class="toc-text">&gt; [!TIP]&gt; 技巧内容</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">25. Hexo文章模板</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A0%87%E9%A2%98"><span class="toc-number"></span> <span class="toc-text">标题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83"><span class="toc-number">2.</span> <span class="toc-text">环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">3.</span> <span class="toc-text">安装</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/04/mweb-17858042778995/" title="这是一个测试网站">这是一个测试网站</a><time datetime="2026-08-03T16:00:00.000Z" title="发表于 2026-08-04 00:00:00">2026-08-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/04/mweb-17858155443606/" title="Markdown语法大全">Markdown语法大全</a><time datetime="2026-08-03T16:00:00.000Z" title="发表于 2026-08-04 00:00:00">2026-08-04</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/safe.webp?v=1);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2020 - 2026 By Camer</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.6.1"></script><script src="/js/main.js?v=5.6.1"></script><div class="js-pjax"></div><script src="/js/profile-panel.js?v=6"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.6.1"></script></div></div></body></html>
