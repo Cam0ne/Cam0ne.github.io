@@ -596,11 +596,27 @@ html[data-theme='dark'] #article-container code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 }
 
-html[data-theme='dark'] #article-container code {
+html[data-theme='dark'] #article-container :not(pre) > code {
   border: 1px solid rgba(45, 212, 191, .18);
   border-radius: 5px;
   background: rgba(45, 212, 191, .10);
   color: #99f6e4;
+}
+
+html[data-theme='dark'] #article-container pre code {
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+
+html[data-theme='dark'] #article-container .mweb-math-block {
+  margin: 1.1rem 0;
+  overflow-x: auto;
+  color: var(--cam-text-strong);
+}
+
+html[data-theme='dark'] #article-container .mweb-math-inline {
+  color: var(--cam-text-strong);
 }
 
 html[data-theme='dark'] .post-copyright,

@@ -102,6 +102,7 @@
       label.textContent = number
 
       var anchor = heading.querySelector(':scope > a.anchor, :scope > a.headerlink')
+      if (!heading.id && anchor && anchor.id) heading.id = anchor.id
       if (anchor) anchor.insertAdjacentElement('afterend', label)
       else heading.insertBefore(label, heading.firstChild)
     })
@@ -110,6 +111,7 @@
   function formatTocNumbers() {
     var headingNumbers = Array.from(document.querySelectorAll('#article-container h1,h2,h3,h4,h5,h6')).map(function (heading) {
       return {
+        id: heading.id || heading.querySelector(':scope > a.anchor, :scope > a.headerlink')?.id || '',
         number: heading.dataset.autoNumber,
         text: (heading.textContent || '').replace(/^\s*(?:0x[0-9a-f]+(?:\.[0-9a-f]+)*|\d+(?:\.\d+)*\.?)\s+/i, '').trim()
       }
@@ -123,6 +125,7 @@
       var item = headingNumbers[index]
       if (!numberNode || !textNode || !item) return
 
+      if (item.id) link.setAttribute('href', '#' + item.id)
       numberNode.textContent = item.number + ' '
       textNode.textContent = item.text
     })
