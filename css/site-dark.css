@@ -656,8 +656,9 @@ html[data-theme='dark'] #pagination .pagination-related:not(.no-desc):hover .inf
   color: var(--cam-text);
 }
 
-html[data-theme='dark'] #pagination .pagination-related .info .info-2 {
-  display: none;
+html[data-theme='dark'] #pagination .pagination-related .info .info-2,
+html[data-theme='dark'] #pagination .pagination-related:not(.no-desc):hover .info-2 {
+  display: none !important;
 }
 
 html[data-theme='dark'] #pagination .pagination-related .info .info-item-1 {
