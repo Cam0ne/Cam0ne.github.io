@@ -680,3 +680,25 @@ html[data-theme='dark'] .skill-profile-close {
     margin-left: -4px;
   }
 }
+
+
+html[data-theme='dark'] .post-disclaimer {
+  border-color: rgba(246, 200, 95, .28);
+  background: rgba(17, 24, 33, .94);
+}
+
+html[data-theme='dark'] .post-disclaimer .post-copyright__notice {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+html[data-theme='dark'] .post-disclaimer .post-copyright-meta {
+  color: var(--cam-warn);
+  white-space: nowrap;
+}
+
+html[data-theme='dark'] .post-disclaimer .post-copyright-info {
+  color: rgba(226, 232, 240, .86);
+  line-height: 1.7;
+}
