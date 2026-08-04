@@ -101,14 +101,14 @@
     if (!article) return
 
     var counters = [0, 0, 0, 0, 0, 0]
-    article.querySelectorAll('h1,h2,h3,h4,h5,h6').forEach(function (heading) {
+    article.querySelectorAll('h2,h3,h4,h5,h6').forEach(function (heading) {
       if (heading.closest('pre, code, figure, .mermaid-wrap')) return
       heading.querySelectorAll('.heading-auto-number').forEach(function (node) {
         node.remove()
       })
       cleanHeadingText(heading)
 
-      var level = Number(heading.tagName.slice(1))
+      var level = Number(heading.tagName.slice(1)) - 1
       counters[level - 1] += 1
       for (var i = level; i < counters.length; i++) counters[i] = 0
 
@@ -132,7 +132,7 @@
   }
 
   function formatTocNumbers() {
-    var headingNumbers = Array.from(document.querySelectorAll('#article-container h1,h2,h3,h4,h5,h6')).map(function (heading) {
+    var headingNumbers = Array.from(document.querySelectorAll('#article-container h2,h3,h4,h5,h6')).map(function (heading) {
       return {
         id: heading.id || heading.querySelector(':scope > a.anchor, :scope > a.headerlink')?.id || '',
         number: heading.dataset.autoNumber,
