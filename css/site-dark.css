@@ -847,3 +847,45 @@ html[data-theme='dark'] .post-disclaimer .post-copyright-info {
 html[data-theme='dark'] .post-disclaimer .post-copyright-meta i {
   margin-right: 4px;
 }
+
+html[data-theme='dark'] #pagination + .custom-hr {
+  display: none;
+}
+
+html[data-theme='dark'] #post-comment {
+  margin-top: 28px;
+  padding: 18px;
+  border: 1px solid rgba(148, 163, 184, .16);
+  border-radius: 8px;
+  background: rgba(12, 18, 27, .78);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, .22);
+}
+
+html[data-theme='dark'] #post-comment .comment-head {
+  margin-bottom: 14px;
+}
+
+html[data-theme='dark'] #post-comment .comment-headline {
+  color: rgba(226, 232, 240, .92);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+html[data-theme='dark'] #post-comment .comment-headline i {
+  color: var(--cam-accent);
+}
+
+html[data-theme='dark'] #post-comment .comment-wrap {
+  padding: 0;
+}
+
+html[data-theme='dark'] #utterances-wrap,
+html[data-theme='dark'] #utterances-wrap .utterances {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+html[data-theme='dark'] #utterances-wrap iframe {
+  width: 100% !important;
+  color-scheme: dark;
+}
