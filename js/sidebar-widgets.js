@@ -70,10 +70,18 @@
 
   function insertCards() {
     var aside = document.getElementById('aside-content')
-    if (!aside || document.getElementById('cam-calendar-card')) return
+    var layout = document.getElementById('content-inner')
+    if (!aside || !layout || document.getElementById('cam-calendar-card')) return
 
-    var announcement = aside.querySelector('.card-announcement')
-    var anchor = announcement ? announcement.nextSibling : aside.firstChild
+    layout.classList.add('cam-three-column')
+
+    var rightColumn = document.getElementById('cam-right-widgets')
+    if (!rightColumn) {
+      rightColumn = document.createElement('aside')
+      rightColumn.id = 'cam-right-widgets'
+      rightColumn.className = 'cam-right-widgets aside-content'
+      layout.appendChild(rightColumn)
+    }
 
     var calendarCard = createCard(
       'card-cam-calendar',
@@ -92,8 +100,11 @@
       + '</div>'
     )
 
-    aside.insertBefore(calendarCard, anchor)
-    aside.insertBefore(quoteCard, anchor)
+    var webinfoCard = aside.querySelector('.card-webinfo')
+
+    rightColumn.appendChild(calendarCard)
+    rightColumn.appendChild(quoteCard)
+    if (webinfoCard) rightColumn.appendChild(webinfoCard)
   }
 
   function renderCalendar(data) {

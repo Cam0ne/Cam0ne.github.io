@@ -212,7 +212,8 @@ html[data-theme='dark'] #post-info #post-meta a:hover {
 html[data-theme='dark'] .layout > div:first-child:not(.recent-posts),
 html[data-theme='dark'] #recent-posts > .recent-post-item,
 html[data-theme='dark'] #recent-posts > .recent-post-items .recent-post-item,
-html[data-theme='dark'] #aside-content .card-widget {
+html[data-theme='dark'] #aside-content .card-widget,
+html[data-theme='dark'] #cam-right-widgets .card-widget {
   border: 1px solid var(--cam-border);
   border-radius: var(--cam-radius);
   background: #111821;
@@ -222,7 +223,8 @@ html[data-theme='dark'] #aside-content .card-widget {
 
 html[data-theme='dark'] #recent-posts > .recent-post-item:hover,
 html[data-theme='dark'] #recent-posts > .recent-post-items .recent-post-item:hover,
-html[data-theme='dark'] #aside-content .card-widget:hover {
+html[data-theme='dark'] #aside-content .card-widget:hover,
+html[data-theme='dark'] #cam-right-widgets .card-widget:hover {
   border-color: rgba(45, 212, 191, .30);
   background: #16202b;
   box-shadow: 0 20px 60px rgba(0, 0, 0, .44);
@@ -790,6 +792,27 @@ html[data-theme='dark'] .cam-hitokoto-widget {
   color: var(--cam-text);
 }
 
+#cam-right-widgets {
+  display: block;
+}
+
+#cam-right-widgets .card-widget {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 20px;
+  padding: 20px 24px;
+}
+
+#cam-right-widgets .item-headline {
+  margin-bottom: 8px;
+  font-size: 1.05em;
+  font-weight: 700;
+}
+
+#cam-right-widgets .item-headline i {
+  margin-right: 8px;
+}
+
 html[data-theme='dark'] .cam-calendar-head {
   display: flex;
   align-items: center;
@@ -879,27 +902,69 @@ html[data-theme='dark'] .cam-hitokoto-from {
 }
 
 @media screen and (min-width: 901px) {
-  .layout #aside-content {
+  .layout.cam-three-column {
+    max-width: 1480px;
+    align-items: flex-start;
+  }
+
+  .layout.cam-three-column #aside-content {
+    width: 300px;
+    flex: 0 0 300px;
     order: 1;
     padding-right: 15px;
     padding-left: 0;
   }
 
-  .layout #recent-posts {
+  .layout.cam-three-column #recent-posts {
+    width: auto;
+    min-width: 0;
+    flex: 1 1 auto;
     order: 2;
+  }
+
+  .layout.cam-three-column #cam-right-widgets {
+    width: 300px;
+    flex: 0 0 300px;
+    order: 3;
+    padding-left: 15px;
+  }
+}
+
+@media screen and (min-width: 901px) and (max-width: 1240px) {
+  .layout.cam-three-column {
+    flex-wrap: wrap;
+  }
+
+  .layout.cam-three-column #recent-posts {
+    width: calc(100% - 300px);
+    flex: 1 1 calc(100% - 300px);
+  }
+
+  .layout.cam-three-column #cam-right-widgets {
+    width: 100%;
+    flex: 1 0 100%;
+    padding-left: 315px;
   }
 }
 
 @media (max-width: 768px) {
   html[data-theme='dark'] #recent-posts > .recent-post-item,
   html[data-theme='dark'] #recent-posts > .recent-post-items .recent-post-item,
-  html[data-theme='dark'] #aside-content .card-widget {
+  html[data-theme='dark'] #aside-content .card-widget,
+  html[data-theme='dark'] #cam-right-widgets .card-widget {
     border-radius: 8px;
   }
 
   html[data-theme='dark'] figure.highlight {
     margin-right: -4px;
     margin-left: -4px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  #cam-right-widgets {
+    width: 100%;
+    margin-top: 20px;
   }
 }
 
