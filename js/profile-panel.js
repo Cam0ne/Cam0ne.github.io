@@ -53,7 +53,19 @@
 
   function attachTrigger() {
     renderAboutShell()
+    formatTocNumbers()
     if (document.getElementById('skill-profile-dashboard')) loadData()
+  }
+
+  function formatTocNumbers() {
+    document.querySelectorAll('#card-toc .toc-number').forEach(function (node) {
+      var raw = node.textContent || ''
+      var parts = raw.match(/\d+/g) || []
+      if (!parts.length) return
+      node.textContent = parts.map(function (part) {
+        return '0x' + String(parseInt(part, 10)).padStart(2, '0')
+      }).join('.') + ' '
+    })
   }
 
   function renderAboutShell() {

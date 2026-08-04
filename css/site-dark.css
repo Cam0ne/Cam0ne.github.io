@@ -407,8 +407,25 @@ html[data-theme='dark'] .card-archive-list-count {
   text-align: center;
 }
 
+html[data-theme='dark'] .site-data {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 100%;
+  gap: 0;
+}
+
 html[data-theme='dark'] .site-data > a {
+  display: grid !important;
+  min-width: 0;
+  padding: 6px 4px;
   border-radius: 6px;
+  text-align: center;
+}
+
+html[data-theme='dark'] .site-data > a .headline,
+html[data-theme='dark'] .site-data > a .length-num {
+  display: block;
+  width: 100%;
 }
 
 html[data-theme='dark'] .site-data > a:hover {
