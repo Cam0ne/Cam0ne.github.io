@@ -1,14 +1,9 @@
 {
-  "generatedAt": "2026-08-04T06:25:11.070Z",
+  "generatedAt": "2026-08-04T06:30:44.695Z",
   "totalPosts": 3,
-  "totalTags": 2,
+  "totalTags": 1,
   "totalCategories": 2,
   "skills": [
-    {
-      "name": "测试",
-      "count": 1,
-      "score": 100
-    },
     {
       "name": "语法",
       "count": 1,
@@ -17,12 +12,12 @@
   ],
   "categories": [
     {
-      "name": "测试",
+      "name": "博客",
       "count": 2,
       "score": 100
     },
     {
-      "name": "博客",
+      "name": "测试",
       "count": 1,
       "score": 50
     }
