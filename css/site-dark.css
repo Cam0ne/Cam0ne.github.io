@@ -609,6 +609,64 @@ html[data-theme='dark'] #article-container pre code {
   color: inherit;
 }
 
+html[data-theme='dark'] #article-container .token.comment,
+html[data-theme='dark'] #article-container .token.prolog,
+html[data-theme='dark'] #article-container .token.doctype,
+html[data-theme='dark'] #article-container .token.cdata {
+  color: #64748b;
+}
+
+html[data-theme='dark'] #article-container .token.punctuation {
+  color: #94a3b8;
+}
+
+html[data-theme='dark'] #article-container .token.property,
+html[data-theme='dark'] #article-container .token.tag,
+html[data-theme='dark'] #article-container .token.constant,
+html[data-theme='dark'] #article-container .token.symbol,
+html[data-theme='dark'] #article-container .token.deleted {
+  color: #fb7185;
+}
+
+html[data-theme='dark'] #article-container .token.boolean,
+html[data-theme='dark'] #article-container .token.number {
+  color: #f59e0b;
+}
+
+html[data-theme='dark'] #article-container .token.selector,
+html[data-theme='dark'] #article-container .token.attr-name,
+html[data-theme='dark'] #article-container .token.string,
+html[data-theme='dark'] #article-container .token.char,
+html[data-theme='dark'] #article-container .token.builtin,
+html[data-theme='dark'] #article-container .token.inserted {
+  color: #34d399;
+}
+
+html[data-theme='dark'] #article-container .token.operator,
+html[data-theme='dark'] #article-container .token.entity,
+html[data-theme='dark'] #article-container .token.url,
+html[data-theme='dark'] #article-container .language-css .token.string,
+html[data-theme='dark'] #article-container .style .token.string {
+  color: #22d3ee;
+}
+
+html[data-theme='dark'] #article-container .token.atrule,
+html[data-theme='dark'] #article-container .token.attr-value,
+html[data-theme='dark'] #article-container .token.keyword {
+  color: #60a5fa;
+}
+
+html[data-theme='dark'] #article-container .token.function,
+html[data-theme='dark'] #article-container .token.class-name {
+  color: #a78bfa;
+}
+
+html[data-theme='dark'] #article-container .token.regex,
+html[data-theme='dark'] #article-container .token.important,
+html[data-theme='dark'] #article-container .token.variable {
+  color: #fbbf24;
+}
+
 html[data-theme='dark'] #article-container .mweb-math-block {
   margin: 1.1rem 0;
   overflow-x: auto;

@@ -55,7 +55,24 @@
     renderAboutShell()
     numberArticleHeadings()
     formatTocNumbers()
+    ensurePrismHighlight()
     if (document.getElementById('skill-profile-dashboard')) loadData()
+  }
+
+  function ensurePrismHighlight() {
+    var article = document.getElementById('article-container')
+    if (!article) return
+
+    var run = function () {
+      if (!window.Prism) return
+      if (typeof window.Prism.highlightAllUnder === 'function') {
+        window.Prism.highlightAllUnder(article, true)
+      }
+    }
+
+    run()
+    window.setTimeout(run, 500)
+    window.setTimeout(run, 1200)
   }
 
   function cleanHeadingText(node) {
@@ -152,12 +169,20 @@
       '</section>',
       '<section class="resume-grid">',
       '<div class="resume-panel resume-panel-radar">',
-      '<div class="resume-panel-head"><span>能力分布</span><small>Tag Radar</small></div>',
-      '<div class="skill-radar-wrap"><canvas id="about-skill-radar" width="640" height="640"></canvas></div>',
+      '<div class="resume-panel-head"><span>分类分布</span><small>Category Radar</small></div>',
+      '<div class="skill-radar-wrap"><canvas id="about-category-radar" width="640" height="640"></canvas></div>',
       '</div>',
       '<div class="resume-panel">',
-      '<div class="resume-panel-head"><span>能力条目</span><small>Skill Index</small></div>',
+      '<div class="resume-panel-head"><span>标签条目</span><small>Tag Index</small></div>',
       '<div id="about-skill-bars" class="skill-bars"></div>',
+      '</div>',
+      '<div class="resume-panel">',
+      '<div class="resume-panel-head"><span>分类占比</span><small>Category Mix</small></div>',
+      '<div class="donut-wrap"><canvas id="about-category-donut" width="520" height="360"></canvas></div>',
+      '</div>',
+      '<div class="resume-panel">',
+      '<div class="resume-panel-head"><span>月度趋势</span><small>Monthly Output</small></div>',
+      '<div class="trend-wrap"><canvas id="about-month-trend" width="640" height="360"></canvas></div>',
       '</div>',
       '<div class="resume-panel resume-panel-wide">',
       '<div class="resume-panel-head"><span>写作活跃度</span><small>Last 365 Days</small></div>',
@@ -215,7 +240,9 @@
     if (!document.getElementById('skill-profile-dashboard')) return
     renderMeta(data, 'about-skill-meta', true)
     renderBars(data.skills || [], 'about-skill-bars')
-    renderRadar((data.skills || []).slice(0, 8), 'about-skill-radar')
+    renderRadar((data.categories || []).slice(0, 8), 'about-category-radar')
+    renderDonut((data.categories || []).slice(0, 8), 'about-category-donut')
+    renderTrend(data.months || [], 'about-month-trend')
     renderHeatmap(data.heatmap || [], 'about-article-heatmap')
   }
 
@@ -226,7 +253,7 @@
       meta.innerHTML = [
         '<div class="resume-metric"><strong>' + (data.totalPosts || 0) + '</strong><span>文章</span></div>',
         '<div class="resume-metric"><strong>' + (data.totalTags || 0) + '</strong><span>标签能力</span></div>',
-        '<div class="resume-metric"><strong>' + ((data.heatmap || []).length || 0) + '</strong><span>活跃日期</span></div>'
+        '<div class="resume-metric"><strong>' + (data.totalCategories || 0) + '</strong><span>内容分类</span></div>'
       ].join('')
     } else {
       meta.innerHTML = [
@@ -329,6 +356,143 @@
     }
     ctx.closePath()
     ctx.stroke()
+  }
+
+  function chartColors() {
+    return ['#2dd4bf', '#38bdf8', '#22c55e', '#a78bfa', '#f59e0b', '#fb7185', '#14b8a6', '#60a5fa']
+  }
+
+  function renderDonut(items, id) {
+    var canvas = document.getElementById(id)
+    if (!canvas) return
+    var ctx = canvas.getContext('2d')
+    var width = canvas.width
+    var height = canvas.height
+    var centerX = width * .34
+    var centerY = height / 2
+    var radius = Math.min(width, height) * .28
+    var colors = chartColors()
+    var total = items.reduce(function (sum, item) {
+      return sum + item.count
+    }, 0)
+
+    ctx.clearRect(0, 0, width, height)
+    if (!total) {
+      drawEmptyChart(ctx, width, height, '暂无分类数据')
+      return
+    }
+
+    var start = -Math.PI / 2
+    items.forEach(function (item, index) {
+      var angle = Math.PI * 2 * item.count / total
+      ctx.beginPath()
+      ctx.moveTo(centerX, centerY)
+      ctx.arc(centerX, centerY, radius, start, start + angle)
+      ctx.closePath()
+      ctx.fillStyle = colors[index % colors.length]
+      ctx.fill()
+      start += angle
+    })
+
+    ctx.globalCompositeOperation = 'destination-out'
+    ctx.beginPath()
+    ctx.arc(centerX, centerY, radius * .58, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.globalCompositeOperation = 'source-over'
+
+    ctx.fillStyle = getTextColor(.92)
+    ctx.font = '700 28px sans-serif'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText(total, centerX, centerY - 8)
+    ctx.fillStyle = getTextColor(.62)
+    ctx.font = '18px sans-serif'
+    ctx.fillText('篇', centerX, centerY + 22)
+
+    ctx.textAlign = 'left'
+    items.forEach(function (item, index) {
+      var x = width * .64
+      var y = 74 + index * 34
+      ctx.fillStyle = colors[index % colors.length]
+      ctx.fillRect(x, y - 10, 14, 14)
+      ctx.fillStyle = getTextColor(.82)
+      ctx.font = '18px sans-serif'
+      ctx.fillText(item.name + ' ' + item.count, x + 24, y + 2)
+    })
+  }
+
+  function renderTrend(items, id) {
+    var canvas = document.getElementById(id)
+    if (!canvas) return
+    var ctx = canvas.getContext('2d')
+    var width = canvas.width
+    var height = canvas.height
+    var data = items.slice(-12)
+    var max = data.reduce(function (value, item) {
+      return Math.max(value, item.count)
+    }, 0)
+
+    ctx.clearRect(0, 0, width, height)
+    if (!max) {
+      drawEmptyChart(ctx, width, height, '暂无月度数据')
+      return
+    }
+
+    var padding = 48
+    var chartWidth = width - padding * 2
+    var chartHeight = height - padding * 1.8
+    var gap = 12
+    var barWidth = Math.max(12, (chartWidth - gap * (data.length - 1)) / Math.max(data.length, 1))
+
+    ctx.strokeStyle = 'rgba(148, 163, 184, .18)'
+    ctx.lineWidth = 1
+    for (var line = 0; line <= 3; line++) {
+      var yLine = padding + chartHeight * line / 3
+      ctx.beginPath()
+      ctx.moveTo(padding, yLine)
+      ctx.lineTo(width - padding, yLine)
+      ctx.stroke()
+    }
+
+    data.forEach(function (item, index) {
+      var x = padding + index * (barWidth + gap)
+      var barHeight = chartHeight * item.count / max
+      var y = padding + chartHeight - barHeight
+      var gradient = ctx.createLinearGradient(0, y, 0, padding + chartHeight)
+      gradient.addColorStop(0, '#2dd4bf')
+      gradient.addColorStop(1, '#2563eb')
+      ctx.fillStyle = gradient
+      roundRect(ctx, x, y, barWidth, barHeight, 5)
+      ctx.fill()
+
+      ctx.fillStyle = getTextColor(.62)
+      ctx.font = '15px sans-serif'
+      ctx.textAlign = 'center'
+      ctx.fillText(item.month.slice(5), x + barWidth / 2, height - 18)
+    })
+  }
+
+  function roundRect(ctx, x, y, width, height, radius) {
+    var r = Math.min(radius, width / 2, height / 2)
+    ctx.beginPath()
+    ctx.moveTo(x + r, y)
+    ctx.lineTo(x + width - r, y)
+    ctx.quadraticCurveTo(x + width, y, x + width, y + r)
+    ctx.lineTo(x + width, y + height - r)
+    ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height)
+    ctx.lineTo(x + r, y + height)
+    ctx.quadraticCurveTo(x, y + height, x, y + height - r)
+    ctx.lineTo(x, y + r)
+    ctx.quadraticCurveTo(x, y, x + r, y)
+    ctx.closePath()
+  }
+
+  function drawEmptyChart(ctx, width, height, text) {
+    ctx.fillStyle = getTextColor(.7)
+    ctx.font = '24px sans-serif'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText(text, width / 2, height / 2)
   }
 
   function renderHeatmap(items, id) {

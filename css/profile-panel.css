@@ -348,6 +348,25 @@
   aspect-ratio: 1;
 }
 
+#about-category-radar {
+  width: min(310px, 100%);
+  aspect-ratio: 1;
+}
+
+.donut-wrap,
+.trend-wrap {
+  display: grid;
+  place-items: center;
+  min-height: 250px;
+}
+
+#about-category-donut,
+#about-month-trend {
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+}
+
 @media (max-width: 768px) {
   .skill-profile-modal {
     padding: 12px;

@@ -1,7 +1,8 @@
 {
-  "generatedAt": "2026-08-04T04:56:25.313Z",
+  "generatedAt": "2026-08-04T05:08:26.885Z",
   "totalPosts": 2,
   "totalTags": 2,
+  "totalCategories": 1,
   "skills": [
     {
       "name": "测试",
@@ -14,9 +15,22 @@
       "score": 100
     }
   ],
+  "categories": [
+    {
+      "name": "测试",
+      "count": 2,
+      "score": 100
+    }
+  ],
   "heatmap": [
     {
       "date": "2026-08-04",
+      "count": 2
+    }
+  ],
+  "months": [
+    {
+      "month": "2026-08",
       "count": 2
     }
   ]
