@@ -64,13 +64,19 @@
     })
     if (!firstText) return
 
-    firstText.textContent = firstText.textContent.replace(/^\s*(?:0x[0-9a-f]+(?:\.[0-9a-f]+)*|\d+(?:\.\d+)*\.?)\s+/i, '')
+    firstText.textContent = firstText.textContent.replace(/^\s*(?:\[(?:0x[0-9a-f]+|[A-Z]-\d+(?:\.\d+)*)\]|0x[0-9a-f]+(?:\.[0-9a-f]+)*|\d+(?:\.\d+)*\.?)\s+/i, '')
   }
 
   function formatHeadingNumber(parts) {
-    return parts.map(function (part, index) {
-      return index === 0 ? '0x' + String(part).padStart(2, '0') : String(part).padStart(2, '0')
-    }).join('.')
+    if (parts.length === 1) return '[0x' + String(parts[0]).padStart(2, '0') + ']'
+
+    var chapterIndex = Math.max(parts[0], 1)
+    var letter = String.fromCharCode(64 + ((chapterIndex - 1) % 26) + 1)
+    var sectionParts = parts.slice(1).map(function (part) {
+      return String(part).padStart(2, '0')
+    })
+
+    return '[' + letter + '-' + sectionParts.join('.') + ']'
   }
 
   function numberArticleHeadings() {
@@ -113,7 +119,7 @@
       return {
         id: heading.id || heading.querySelector(':scope > a.anchor, :scope > a.headerlink')?.id || '',
         number: heading.dataset.autoNumber,
-        text: (heading.textContent || '').replace(/^\s*(?:0x[0-9a-f]+(?:\.[0-9a-f]+)*|\d+(?:\.\d+)*\.?)\s+/i, '').trim()
+        text: (heading.textContent || '').replace(/^\s*(?:\[(?:0x[0-9a-f]+|[A-Z]-\d+(?:\.\d+)*)\]|0x[0-9a-f]+(?:\.[0-9a-f]+)*|\d+(?:\.\d+)*\.?)\s+/i, '').trim()
       }
     }).filter(function (item) {
       return item.number
