@@ -692,6 +692,11 @@ html[data-theme='dark'] .post-disclaimer {
   box-shadow: none;
 }
 
+html[data-theme='dark'] .post-disclaimer::before {
+  display: none;
+  content: none;
+}
+
 html[data-theme='dark'] .post-disclaimer .post-copyright__notice {
   display: block;
 }
