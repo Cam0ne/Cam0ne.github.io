@@ -1,9 +1,15 @@
 {
-  "generatedAt": "2026-08-04T09:27:50.020Z",
+  "generatedAt": "2026-08-04T09:30:10.387Z",
   "totalPosts": 1,
-  "totalTags": 0,
+  "totalTags": 1,
   "totalCategories": 1,
-  "skills": [],
+  "skills": [
+    {
+      "name": "测试",
+      "count": 1,
+      "score": 100
+    }
+  ],
   "categories": [
     {
       "name": "随记",
