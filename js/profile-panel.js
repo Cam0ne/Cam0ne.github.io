@@ -53,18 +53,78 @@
 
   function attachTrigger() {
     renderAboutShell()
+    numberArticleHeadings()
     formatTocNumbers()
     if (document.getElementById('skill-profile-dashboard')) loadData()
   }
 
-  function formatTocNumbers() {
-    document.querySelectorAll('#card-toc .toc-number').forEach(function (node) {
-      var raw = node.textContent || ''
-      var parts = raw.match(/\d+/g) || []
+  function cleanHeadingText(node) {
+    var firstText = Array.from(node.childNodes).find(function (child) {
+      return child.nodeType === 3 && child.textContent.trim()
+    })
+    if (!firstText) return
+
+    firstText.textContent = firstText.textContent.replace(/^\s*(?:0x[0-9a-f]+(?:\.[0-9a-f]+)*|\d+(?:\.\d+)*\.?)\s+/i, '')
+  }
+
+  function formatHeadingNumber(parts) {
+    return parts.map(function (part, index) {
+      return index === 0 ? '0x' + String(part).padStart(2, '0') : String(part).padStart(2, '0')
+    }).join('.')
+  }
+
+  function numberArticleHeadings() {
+    var article = document.getElementById('article-container')
+    if (!article) return
+
+    var counters = [0, 0, 0, 0, 0, 0]
+    article.querySelectorAll('h1,h2,h3,h4,h5,h6').forEach(function (heading) {
+      if (heading.closest('pre, code, figure, .mermaid-wrap')) return
+      heading.querySelectorAll('.heading-auto-number').forEach(function (node) {
+        node.remove()
+      })
+      cleanHeadingText(heading)
+
+      var level = Number(heading.tagName.slice(1))
+      counters[level - 1] += 1
+      for (var i = level; i < counters.length; i++) counters[i] = 0
+
+      var parts = counters.slice(0, level).filter(function (value) {
+        return value > 0
+      })
       if (!parts.length) return
-      node.textContent = parts.map(function (part) {
-        return '0x' + String(parseInt(part, 10)).padStart(2, '0')
-      }).join('.') + ' '
+
+      var number = formatHeadingNumber(parts)
+      heading.dataset.autoNumber = number
+
+      var label = document.createElement('span')
+      label.className = 'heading-auto-number'
+      label.textContent = number
+
+      var anchor = heading.querySelector(':scope > a.anchor, :scope > a.headerlink')
+      if (anchor) anchor.insertAdjacentElement('afterend', label)
+      else heading.insertBefore(label, heading.firstChild)
+    })
+  }
+
+  function formatTocNumbers() {
+    var headingNumbers = Array.from(document.querySelectorAll('#article-container h1,h2,h3,h4,h5,h6')).map(function (heading) {
+      return {
+        number: heading.dataset.autoNumber,
+        text: (heading.textContent || '').replace(/^\s*(?:0x[0-9a-f]+(?:\.[0-9a-f]+)*|\d+(?:\.\d+)*\.?)\s+/i, '').trim()
+      }
+    }).filter(function (item) {
+      return item.number
+    })
+
+    document.querySelectorAll('#card-toc .toc-link').forEach(function (link, index) {
+      var numberNode = link.querySelector('.toc-number')
+      var textNode = link.querySelector('.toc-text')
+      var item = headingNumbers[index]
+      if (!numberNode || !textNode || !item) return
+
+      numberNode.textContent = item.number + ' '
+      textNode.textContent = item.text
     })
   }
 
