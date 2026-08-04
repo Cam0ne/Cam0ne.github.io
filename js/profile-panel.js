@@ -81,7 +81,7 @@
     })
     if (!firstText) return
 
-    firstText.textContent = firstText.textContent.replace(/^\s*(?:\[(?:0x[0-9a-f]+|[A-Z]-\d+(?:\.\d+)*)\]|0x[0-9a-f]+(?:\.[0-9a-f]+)*|\d+(?:\.\d+)*\.?)\s+/i, '')
+    firstText.textContent = firstText.textContent.replace(/^\s*(?:\[(?:0x[0-9a-f]+|[A-Z]-\d+(?:\.\d+)*)\]|0x[0-9a-f]+(?:\.[0-9a-f]+)*|\d+(?:\.\d+)*\.?)\s*/i, '')
   }
 
   function formatHeadingNumber(parts) {
@@ -136,7 +136,7 @@
       return {
         id: heading.id || heading.querySelector(':scope > a.anchor, :scope > a.headerlink')?.id || '',
         number: heading.dataset.autoNumber,
-        text: (heading.textContent || '').replace(/^\s*(?:\[(?:0x[0-9a-f]+|[A-Z]-\d+(?:\.\d+)*)\]|0x[0-9a-f]+(?:\.[0-9a-f]+)*|\d+(?:\.\d+)*\.?)\s+/i, '').trim()
+        text: (heading.textContent || '').replace(/^\s*(?:\[(?:0x[0-9a-f]+|[A-Z]-\d+(?:\.\d+)*)\]|0x[0-9a-f]+(?:\.[0-9a-f]+)*|\d+(?:\.\d+)*\.?)\s*/i, '').trim()
       }
     }).filter(function (item) {
       return item.number
