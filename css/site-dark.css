@@ -930,6 +930,15 @@ html[data-theme='dark'] .cam-hitokoto-from {
   }
 }
 
+@media screen and (min-width: 900px) {
+  .layout.cam-three-column > .aside-content > .sticky_layout,
+  .layout.cam-three-column > #aside-content > .sticky_layout,
+  .layout.cam-three-column > #cam-right-widgets {
+    position: static !important;
+    top: auto !important;
+  }
+}
+
 @media screen and (min-width: 901px) and (max-width: 1240px) {
   .layout.cam-three-column {
     flex-wrap: wrap;
