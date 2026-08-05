@@ -921,6 +921,24 @@ html[data-theme='dark'] .cam-hitokoto-from {
     align-self: flex-start;
     max-height: calc(100vh - 104px);
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, .26) transparent;
+  }
+
+  .layout.cam-three-column > #aside-content::-webkit-scrollbar,
+  .layout.cam-three-column > #cam-right-widgets::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .layout.cam-three-column > #aside-content::-webkit-scrollbar-track,
+  .layout.cam-three-column > #cam-right-widgets::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .layout.cam-three-column > #aside-content::-webkit-scrollbar-thumb,
+  .layout.cam-three-column > #cam-right-widgets::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(148, 163, 184, .26);
   }
 
   .layout.cam-three-column > #aside-content > .sticky_layout {
