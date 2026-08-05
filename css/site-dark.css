@@ -263,14 +263,8 @@ html[data-theme='dark'] #article-container h1 {
 }
 
 html[data-theme='dark'] #article-container h1::before {
-  content: '';
-  display: inline-block;
-  width: 4px;
-  height: 1.05em;
-  margin-right: 12px;
-  border-radius: 999px;
-  background: linear-gradient(180deg, var(--cam-accent), var(--cam-accent-2));
-  vertical-align: -.16em;
+  content: none;
+  display: none;
 }
 
 html[data-theme='dark'] #article-container h2 {
@@ -280,15 +274,8 @@ html[data-theme='dark'] #article-container h2 {
 }
 
 html[data-theme='dark'] #article-container h2::before {
-  content: '';
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 10px;
-  border-radius: 50%;
-  background: var(--cam-accent);
-  box-shadow: 0 0 0 4px rgba(45, 212, 191, .10);
-  vertical-align: .12em;
+  content: none;
+  display: none;
 }
 
 html[data-theme='dark'] #article-container h3 {
@@ -298,13 +285,8 @@ html[data-theme='dark'] #article-container h3 {
 }
 
 html[data-theme='dark'] #article-container h3::before {
-  content: '';
-  display: inline-block;
-  width: 18px;
-  height: 2px;
-  margin-right: 10px;
-  background: var(--cam-accent);
-  vertical-align: .28em;
+  content: none;
+  display: none;
 }
 
 html[data-theme='dark'] #article-container .heading-auto-number {
@@ -931,9 +913,17 @@ html[data-theme='dark'] .cam-hitokoto-from {
 }
 
 @media screen and (min-width: 900px) {
-  .layout.cam-three-column > .aside-content > .sticky_layout,
-  .layout.cam-three-column > #aside-content > .sticky_layout,
+  .layout.cam-three-column > #aside-content,
   .layout.cam-three-column > #cam-right-widgets {
+    position: sticky !important;
+    position: -webkit-sticky !important;
+    top: 84px !important;
+    align-self: flex-start;
+    max-height: calc(100vh - 104px);
+    overflow-y: auto;
+  }
+
+  .layout.cam-three-column > #aside-content > .sticky_layout {
     position: static !important;
     top: auto !important;
   }
