@@ -46,6 +46,7 @@ html[data-theme='dark'] body {
 }
 
 html[data-theme='dark'] #web_bg {
+  background-color: var(--cam-bg) !important;
   background-position: center center !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
@@ -53,6 +54,7 @@ html[data-theme='dark'] #web_bg {
 }
 
 html[data-theme='dark'] #page-header {
+  background-color: var(--cam-bg) !important;
   background-position: center center !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
