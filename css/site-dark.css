@@ -60,6 +60,10 @@ html[data-theme='dark'] #page-header {
   background-repeat: no-repeat !important;
 }
 
+html[data-theme='dark'] #footer {
+  background-color: var(--cam-bg) !important;
+}
+
 html[data-theme='dark'] #web_bg::after {
   display: none !important;
   content: none !important;
