@@ -1,25 +1,19 @@
 {
-  "generatedAt": "2026-08-04T09:30:10.387Z",
+  "generatedAt": "2026-08-05T00:43:58.152Z",
   "totalPosts": 1,
-  "totalTags": 1,
+  "totalTags": 0,
   "totalCategories": 1,
-  "skills": [
-    {
-      "name": "测试",
-      "count": 1,
-      "score": 100
-    }
-  ],
+  "skills": [],
   "categories": [
     {
-      "name": "随记",
+      "name": "AI开发",
       "count": 1,
       "score": 100
     }
   ],
   "heatmap": [
     {
-      "date": "2026-08-04",
+      "date": "2026-08-05",
       "count": 1
     }
   ],
