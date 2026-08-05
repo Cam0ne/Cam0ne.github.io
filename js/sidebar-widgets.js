@@ -71,9 +71,11 @@
   function insertCards() {
     var aside = document.getElementById('aside-content')
     var layout = document.getElementById('content-inner')
-    if (!aside || !layout || document.getElementById('cam-calendar-card')) return
+    if (!aside || !layout) return
 
     layout.classList.add('cam-three-column')
+
+    if (document.getElementById('cam-calendar-card')) return
 
     var rightColumn = document.getElementById('cam-right-widgets')
     if (!rightColumn) {
@@ -116,6 +118,9 @@
   }
 
   function loadCalendar() {
+    var root = document.getElementById('cam-calendar-card')
+    if (!root || root.getAttribute('data-static') === 'true') return
+
     fetch('/learning-widgets.json', { cache: 'no-store' })
       .then(function (response) {
         if (!response.ok) throw new Error('Failed to load calendar')
