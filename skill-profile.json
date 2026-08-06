@@ -1,9 +1,14 @@
 {
-  "generatedAt": "2026-08-06T13:29:33.459Z",
+  "generatedAt": "2026-08-06T13:32:29.582Z",
   "totalPosts": 2,
-  "totalTags": 1,
+  "totalTags": 2,
   "totalCategories": 1,
   "skills": [
+    {
+      "name": "部署",
+      "count": 1,
+      "score": 100
+    },
     {
       "name": "大模型",
       "count": 1,
