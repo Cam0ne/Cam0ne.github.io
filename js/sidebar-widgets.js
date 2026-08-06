@@ -75,14 +75,18 @@
 
     layout.classList.add('cam-three-column')
 
-    if (document.getElementById('cam-calendar-card')) return
-
     var rightColumn = document.getElementById('cam-right-widgets')
     if (!rightColumn) {
       rightColumn = document.createElement('aside')
       rightColumn.id = 'cam-right-widgets'
       rightColumn.className = 'cam-right-widgets aside-content'
       layout.appendChild(rightColumn)
+    }
+
+    var webinfoCard = aside.querySelector('.card-webinfo')
+    if (document.getElementById('cam-calendar-card')) {
+      if (webinfoCard) rightColumn.appendChild(webinfoCard)
+      return
     }
 
     var calendarCard = createCard(
@@ -101,8 +105,6 @@
       + '<div id="cam-hitokoto-from" class="cam-hitokoto-from">Hitokoto</div>'
       + '</div>'
     )
-
-    var webinfoCard = aside.querySelector('.card-webinfo')
 
     rightColumn.appendChild(calendarCard)
     rightColumn.appendChild(quoteCard)
