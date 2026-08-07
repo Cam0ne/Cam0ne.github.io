@@ -609,7 +609,7 @@ html[data-theme='dark'] #article-container pre.line-numbers > code {
 }
 
 html[data-theme='dark'] #article-container pre.line-numbers .line-numbers-rows {
-  top: 18px;
+  top: 0;
   left: -5.8em;
   width: 4.6em;
   border-right: 1px solid rgba(148, 163, 184, .14);
