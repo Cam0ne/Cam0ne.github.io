@@ -122,9 +122,7 @@
     if (!window.matchMedia('(max-width: 768px)').matches) return
 
     var sourceCards = [
-      aside.querySelector('.card-recent-post'),
-      aside.querySelector('.card-categories'),
-      aside.querySelector('.card-tags')
+      aside.querySelector('.card-recent-post')
     ].filter(Boolean)
 
     if (!sourceCards.length) return
