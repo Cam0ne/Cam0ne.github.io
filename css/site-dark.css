@@ -1505,7 +1505,7 @@ html[data-theme='dark'] .cam-hitokoto-from {
   }
 
   html[data-theme='dark'] #rightside {
-    right: max(4px, env(safe-area-inset-right)) !important;
+    right: env(safe-area-inset-right) !important;
     bottom: calc(12px + env(safe-area-inset-bottom));
   }
 
@@ -1515,6 +1515,11 @@ html[data-theme='dark'] .cam-hitokoto-from {
     height: 34px;
     border-radius: 7px;
     font-size: .92rem;
+  }
+
+  html[data-theme='dark'] .post #aside-content,
+  html[data-theme='dark'] .post #cam-right-widgets {
+    display: none !important;
   }
 
   html[data-theme='dark'] #footer {
@@ -1574,6 +1579,12 @@ html[data-theme='dark'] .cam-hitokoto-from {
 
   html[data-theme='dark'] .post #article-container {
     padding-right: 22px;
+  }
+
+  html[data-theme='dark'] .post #rightside > div > button,
+  html[data-theme='dark'] .post #rightside > div > a {
+    width: 32px;
+    height: 32px;
   }
 
   html[data-theme='dark'] #article-container h1 {
