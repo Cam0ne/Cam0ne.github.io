@@ -586,6 +586,15 @@ html[data-theme='dark'] #article-container code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 }
 
+html[data-theme='dark'] figure.highlight .code pre,
+html[data-theme='dark'] #article-container pre[class*='language-'] {
+  padding: 18px 22px;
+}
+
+html[data-theme='dark'] figure.highlight .gutter pre {
+  padding: 18px 12px;
+}
+
 html[data-theme='dark'] #article-container :not(pre) > code {
   border: 1px solid rgba(45, 212, 191, .18);
   border-radius: 5px;
