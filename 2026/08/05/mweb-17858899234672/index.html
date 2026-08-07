@@ -229,12 +229,12 @@
 </ul>
 <p>如果目标输出需要进入程序处理，建议优先使用 JSON、YAML 或固定字段格式，而不是自然语言长段落。</p>
 <p>示例输出结构：</p>
-<pre class="line-numbers" data-language="json"><code class="language-json">&#123;
-  "label": "category_a",
-  "confidence": 0.91,
-  "reason": "输入中包含与 category_a 匹配的关键特征"
-&#125;
-</code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"label"</span><span class="token operator">:</span> <span class="token string">"category_a"</span><span class="token punctuation">,</span>
+  <span class="token property">"confidence"</span><span class="token operator">:</span> <span class="token number">0.91</span><span class="token punctuation">,</span>
+  <span class="token property">"reason"</span><span class="token operator">:</span> <span class="token string">"输入中包含与 category_a 匹配的关键特征"</span>
+<span class="token punctuation">}</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></pre>
 <hr>
 <h2 id="方案选择"><a id="方案选择" class="anchor" aria-hidden="true" href="#方案选择"><span class="octicon octicon-link"></span></a>方案选择</h2>
 <p>微调之前先判断是否真的需要微调。很多问题可以通过提示词、RAG 或规则系统解决。</p>
@@ -286,20 +286,20 @@
 <p>数据质量通常比训练技巧更重要。微调数据不是越多越好，而是越清晰、一致、覆盖关键场景越好。</p>
 <h3 id="定义样本格式"><a id="定义样本格式" class="anchor" aria-hidden="true" href="#定义样本格式"><span class="octicon octicon-link"></span></a>定义样本格式</h3>
 <p>建议把每条样本整理成统一结构：</p>
-<pre class="line-numbers" data-language="json"><code class="language-json">&#123;
-  "id": "sample_000001",
-  "input": "这里放模型需要处理的输入内容",
-  "output": &#123;
-    "label": "category_a",
-    "confidence": 0.91,
-    "reason": "判断依据"
-  &#125;,
-  "meta": &#123;
-    "source": "optional",
-    "version": "v1"
-  &#125;
-&#125;
-</code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"sample_000001"</span><span class="token punctuation">,</span>
+  <span class="token property">"input"</span><span class="token operator">:</span> <span class="token string">"这里放模型需要处理的输入内容"</span><span class="token punctuation">,</span>
+  <span class="token property">"output"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"label"</span><span class="token operator">:</span> <span class="token string">"category_a"</span><span class="token punctuation">,</span>
+    <span class="token property">"confidence"</span><span class="token operator">:</span> <span class="token number">0.91</span><span class="token punctuation">,</span>
+    <span class="token property">"reason"</span><span class="token operator">:</span> <span class="token string">"判断依据"</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token property">"meta"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"source"</span><span class="token operator">:</span> <span class="token string">"optional"</span><span class="token punctuation">,</span>
+    <span class="token property">"version"</span><span class="token operator">:</span> <span class="token string">"v1"</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <p>其中：</p>
 <ul>
 <li><code>input</code> 是模型看到的任务输入</li>
@@ -317,42 +317,42 @@
 <li>对敏感信息做脱敏处理</li>
 </ul>
 <p>伪代码：</p>
-<pre class="line-numbers" data-language="python"><code class="language-python">def clean_sample(raw):
-    text = normalize_encoding(raw["input"])
-    text = remove_noise(text)
-    text = mask_sensitive_info(text)
-    text = truncate_by_tokens(text, max_tokens=2048)
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">clean_sample</span><span class="token punctuation">(</span>raw<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    text <span class="token operator">=</span> normalize_encoding<span class="token punctuation">(</span>raw<span class="token punctuation">[</span><span class="token string">"input"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    text <span class="token operator">=</span> remove_noise<span class="token punctuation">(</span>text<span class="token punctuation">)</span>
+    text <span class="token operator">=</span> mask_sensitive_info<span class="token punctuation">(</span>text<span class="token punctuation">)</span>
+    text <span class="token operator">=</span> truncate_by_tokens<span class="token punctuation">(</span>text<span class="token punctuation">,</span> max_tokens<span class="token operator">=</span><span class="token number">2048</span><span class="token punctuation">)</span>
 
-    if not text.strip():
-        return None
+    <span class="token keyword">if</span> <span class="token keyword">not</span> text<span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> <span class="token boolean">None</span>
 
-    return &#123;
-        "id": raw["id"],
-        "input": text,
-        "output": normalize_output(raw["output"])
-    &#125;
-</code></pre>
+    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+        <span class="token string">"id"</span><span class="token punctuation">:</span> raw<span class="token punctuation">[</span><span class="token string">"id"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string">"input"</span><span class="token punctuation">:</span> text<span class="token punctuation">,</span>
+        <span class="token string">"output"</span><span class="token punctuation">:</span> normalize_output<span class="token punctuation">(</span>raw<span class="token punctuation">[</span><span class="token string">"output"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <h3 id="去重"><a id="去重" class="anchor" aria-hidden="true" href="#去重"><span class="octicon octicon-link"></span></a>去重</h3>
 <p>重复样本会让模型过度记忆某些模式，导致评估分数虚高。</p>
 <p>伪代码：</p>
-<pre class="line-numbers" data-language="python"><code class="language-python">seen = set()
-deduped = []
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">seen <span class="token operator">=</span> <span class="token builtin">set</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+deduped <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
 
-for sample in samples:
-    fingerprint = hash_text(sample["input"])
-    if fingerprint in seen:
-        continue
+<span class="token keyword">for</span> sample <span class="token keyword">in</span> samples<span class="token punctuation">:</span>
+    fingerprint <span class="token operator">=</span> hash_text<span class="token punctuation">(</span>sample<span class="token punctuation">[</span><span class="token string">"input"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> fingerprint <span class="token keyword">in</span> seen<span class="token punctuation">:</span>
+        <span class="token keyword">continue</span>
 
-    seen.add(fingerprint)
-    deduped.append(sample)
-</code></pre>
+    seen<span class="token punctuation">.</span>add<span class="token punctuation">(</span>fingerprint<span class="token punctuation">)</span>
+    deduped<span class="token punctuation">.</span>append<span class="token punctuation">(</span>sample<span class="token punctuation">)</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <h3 id="类别平衡"><a id="类别平衡" class="anchor" aria-hidden="true" href="#类别平衡"><span class="octicon octicon-link"></span></a>类别平衡</h3>
 <p>如果某些类别样本过多，模型容易学成“永远预测多数类”。因此需要检查标签分布。</p>
-<pre class="line-numbers" data-language="python"><code class="language-python">from collections import Counter
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> collections <span class="token keyword">import</span> Counter
 
-label_count = Counter(sample["output"]["label"] for sample in samples)
-print(label_count)
-</code></pre>
+label_count <span class="token operator">=</span> Counter<span class="token punctuation">(</span>sample<span class="token punctuation">[</span><span class="token string">"output"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">"label"</span><span class="token punctuation">]</span> <span class="token keyword">for</span> sample <span class="token keyword">in</span> samples<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>label_count<span class="token punctuation">)</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></pre>
 <p>常见处理方式：</p>
 <ul>
 <li>多数类下采样</li>
@@ -364,23 +364,23 @@ print(label_count)
 <h2 id="构造sft数据集"><a id="构造sft数据集" class="anchor" aria-hidden="true" href="#构造sft数据集"><span class="octicon octicon-link"></span></a>构造 SFT 数据集</h2>
 <p>SFT（Supervised Fine-Tuning）需要把样本组织成“指令 → 回答”的形式。对于 Chat 模型，通常使用 messages 格式。</p>
 <p>示例：</p>
-<pre class="line-numbers" data-language="json"><code class="language-json">&#123;
-  "messages": [
-    &#123;
-      "role": "system",
-      "content": "你是一个任务助手。请严格按照 JSON 格式输出，不要输出多余文本。"
-    &#125;,
-    &#123;
-      "role": "user",
-      "content": "请处理以下输入：\n这里是待处理文本"
-    &#125;,
-    &#123;
-      "role": "assistant",
-      "content": "&#123;\"label\":\"category_a\",\"confidence\":0.91,\"reason\":\"判断依据\"&#125;"
-    &#125;
-  ]
-&#125;
-</code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"messages"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"role"</span><span class="token operator">:</span> <span class="token string">"system"</span><span class="token punctuation">,</span>
+      <span class="token property">"content"</span><span class="token operator">:</span> <span class="token string">"你是一个任务助手。请严格按照 JSON 格式输出，不要输出多余文本。"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"role"</span><span class="token operator">:</span> <span class="token string">"user"</span><span class="token punctuation">,</span>
+      <span class="token property">"content"</span><span class="token operator">:</span> <span class="token string">"请处理以下输入：\n这里是待处理文本"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"role"</span><span class="token operator">:</span> <span class="token string">"assistant"</span><span class="token punctuation">,</span>
+      <span class="token property">"content"</span><span class="token operator">:</span> <span class="token string">"{\"label\":\"category_a\",\"confidence\":0.91,\"reason\":\"判断依据\"}"</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <p>构造时要注意：</p>
 <ul>
 <li>system prompt 保持稳定，不要每条样本随意变化</li>
@@ -389,19 +389,19 @@ print(label_count)
 <li>不要把测试集样本混入训练集</li>
 </ul>
 <p>伪代码：</p>
-<pre class="line-numbers" data-language="python"><code class="language-python">def build_chat_sample(sample):
-    system = "你是一个任务助手。请严格输出 JSON。"
-    user = f"请处理以下输入：\n&#123;sample['input']&#125;"
-    assistant = json.dumps(sample["output"], ensure_ascii=False)
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">build_chat_sample</span><span class="token punctuation">(</span>sample<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    system <span class="token operator">=</span> <span class="token string">"你是一个任务助手。请严格输出 JSON。"</span>
+    user <span class="token operator">=</span> <span class="token string-interpolation"><span class="token string">f"请处理以下输入：\n</span><span class="token interpolation"><span class="token punctuation">{</span>sample<span class="token punctuation">[</span><span class="token string">'input'</span><span class="token punctuation">]</span><span class="token punctuation">}</span></span><span class="token string">"</span></span>
+    assistant <span class="token operator">=</span> json<span class="token punctuation">.</span>dumps<span class="token punctuation">(</span>sample<span class="token punctuation">[</span><span class="token string">"output"</span><span class="token punctuation">]</span><span class="token punctuation">,</span> ensure_ascii<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
 
-    return &#123;
-        "messages": [
-            &#123;"role": "system", "content": system&#125;,
-            &#123;"role": "user", "content": user&#125;,
-            &#123;"role": "assistant", "content": assistant&#125;
-        ]
-    &#125;
-</code></pre>
+    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+        <span class="token string">"messages"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span><span class="token string">"role"</span><span class="token punctuation">:</span> <span class="token string">"system"</span><span class="token punctuation">,</span> <span class="token string">"content"</span><span class="token punctuation">:</span> system<span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span><span class="token string">"role"</span><span class="token punctuation">:</span> <span class="token string">"user"</span><span class="token punctuation">,</span> <span class="token string">"content"</span><span class="token punctuation">:</span> user<span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span><span class="token string">"role"</span><span class="token punctuation">:</span> <span class="token string">"assistant"</span><span class="token punctuation">,</span> <span class="token string">"content"</span><span class="token punctuation">:</span> assistant<span class="token punctuation">}</span>
+        <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <hr>
 <h2 id="数据集划分"><a id="数据集划分" class="anchor" aria-hidden="true" href="#数据集划分"><span class="octicon octicon-link"></span></a>数据集划分</h2>
 <p>数据集至少应划分为：</p>
@@ -433,13 +433,13 @@ print(label_count)
 </table>
 <p>推荐按标签分层划分，避免某些类别只出现在训练集或测试集里。</p>
 <p>伪代码：</p>
-<pre class="line-numbers" data-language="python"><code class="language-python">train, valid, test = stratified_split(
-    samples,
-    label_key=lambda x: x["output"]["label"],
-    ratios=(0.8, 0.1, 0.1),
-    seed=42
-)
-</code></pre>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">train<span class="token punctuation">,</span> valid<span class="token punctuation">,</span> test <span class="token operator">=</span> stratified_split<span class="token punctuation">(</span>
+    samples<span class="token punctuation">,</span>
+    label_key<span class="token operator">=</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> x<span class="token punctuation">[</span><span class="token string">"output"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">"label"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    ratios<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">0.8</span><span class="token punctuation">,</span> <span class="token number">0.1</span><span class="token punctuation">,</span> <span class="token number">0.1</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    seed<span class="token operator">=</span><span class="token number">42</span>
+<span class="token punctuation">)</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <p>验证集的意义：</p>
 <ul>
 <li>观察模型是否过拟合</li>
@@ -504,46 +504,46 @@ print(label_count)
 </tbody>
 </table>
 <p>示例命令：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">python train_lora.py \
-  --base_model path/to/base-model \
-  --train_file data/train.jsonl \
-  --valid_file data/valid.jsonl \
-  --output_dir output/task-lora \
-  --max_seq_length 2048 \
-  --learning_rate 2e-4 \
-  --epochs 3
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">python train_lora.py <span class="token punctuation">\</span>
+  <span class="token parameter variable">--base_model</span> path/to/base-model <span class="token punctuation">\</span>
+  <span class="token parameter variable">--train_file</span> data/train.jsonl <span class="token punctuation">\</span>
+  <span class="token parameter variable">--valid_file</span> data/valid.jsonl <span class="token punctuation">\</span>
+  <span class="token parameter variable">--output_dir</span> output/task-lora <span class="token punctuation">\</span>
+  <span class="token parameter variable">--max_seq_length</span> <span class="token number">2048</span> <span class="token punctuation">\</span>
+  <span class="token parameter variable">--learning_rate</span> 2e-4 <span class="token punctuation">\</span>
+  <span class="token parameter variable">--epochs</span> <span class="token number">3</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <h3 id="训练主流程伪代码"><a id="训练主流程伪代码" class="anchor" aria-hidden="true" href="#训练主流程伪代码"><span class="octicon octicon-link"></span></a>训练主流程伪代码</h3>
-<pre class="line-numbers" data-language="python"><code class="language-python">model = load_base_model("path/to/base-model", quantization="4bit")
-tokenizer = load_tokenizer("path/to/base-model")
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">model <span class="token operator">=</span> load_base_model<span class="token punctuation">(</span><span class="token string">"path/to/base-model"</span><span class="token punctuation">,</span> quantization<span class="token operator">=</span><span class="token string">"4bit"</span><span class="token punctuation">)</span>
+tokenizer <span class="token operator">=</span> load_tokenizer<span class="token punctuation">(</span><span class="token string">"path/to/base-model"</span><span class="token punctuation">)</span>
 
-model = add_lora_adapter(
-    model,
-    rank=16,
-    alpha=32,
-    dropout=0.05,
-    target_modules=["q_proj", "v_proj"]
-)
+model <span class="token operator">=</span> add_lora_adapter<span class="token punctuation">(</span>
+    model<span class="token punctuation">,</span>
+    rank<span class="token operator">=</span><span class="token number">16</span><span class="token punctuation">,</span>
+    alpha<span class="token operator">=</span><span class="token number">32</span><span class="token punctuation">,</span>
+    dropout<span class="token operator">=</span><span class="token number">0.05</span><span class="token punctuation">,</span>
+    target_modules<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">"q_proj"</span><span class="token punctuation">,</span> <span class="token string">"v_proj"</span><span class="token punctuation">]</span>
+<span class="token punctuation">)</span>
 
-train_dataset = load_jsonl("data/train.jsonl")
-valid_dataset = load_jsonl("data/valid.jsonl")
+train_dataset <span class="token operator">=</span> load_jsonl<span class="token punctuation">(</span><span class="token string">"data/train.jsonl"</span><span class="token punctuation">)</span>
+valid_dataset <span class="token operator">=</span> load_jsonl<span class="token punctuation">(</span><span class="token string">"data/valid.jsonl"</span><span class="token punctuation">)</span>
 
-trainer = Trainer(
-    model=model,
-    tokenizer=tokenizer,
-    train_dataset=train_dataset,
-    eval_dataset=valid_dataset,
-    learning_rate=2e-4,
-    epochs=3,
-    batch_size=2,
-    gradient_accumulation_steps=8,
-    eval_steps=500,
-    save_steps=500
-)
+trainer <span class="token operator">=</span> Trainer<span class="token punctuation">(</span>
+    model<span class="token operator">=</span>model<span class="token punctuation">,</span>
+    tokenizer<span class="token operator">=</span>tokenizer<span class="token punctuation">,</span>
+    train_dataset<span class="token operator">=</span>train_dataset<span class="token punctuation">,</span>
+    eval_dataset<span class="token operator">=</span>valid_dataset<span class="token punctuation">,</span>
+    learning_rate<span class="token operator">=</span><span class="token number">2e-4</span><span class="token punctuation">,</span>
+    epochs<span class="token operator">=</span><span class="token number">3</span><span class="token punctuation">,</span>
+    batch_size<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span>
+    gradient_accumulation_steps<span class="token operator">=</span><span class="token number">8</span><span class="token punctuation">,</span>
+    eval_steps<span class="token operator">=</span><span class="token number">500</span><span class="token punctuation">,</span>
+    save_steps<span class="token operator">=</span><span class="token number">500</span>
+<span class="token punctuation">)</span>
 
-trainer.train()
-trainer.save_model("output/task-lora")
-</code></pre>
+trainer<span class="token punctuation">.</span>train<span class="token punctuation">(</span><span class="token punctuation">)</span>
+trainer<span class="token punctuation">.</span>save_model<span class="token punctuation">(</span><span class="token string">"output/task-lora"</span><span class="token punctuation">)</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <h3 id="训练过程观察"><a id="训练过程观察" class="anchor" aria-hidden="true" href="#训练过程观察"><span class="octicon octicon-link"></span></a>训练过程观察</h3>
 <p>训练时重点观察：</p>
 <ul>
@@ -567,35 +567,35 @@ trainer.save_model("output/task-lora")
 <h3 id="结构化输出检查"><a id="结构化输出检查" class="anchor" aria-hidden="true" href="#结构化输出检查"><span class="octicon octicon-link"></span></a>结构化输出检查</h3>
 <p>如果要求模型输出 JSON，首先检查格式合规率。</p>
 <p>伪代码：</p>
-<pre class="line-numbers" data-language="python"><code class="language-python">def is_valid_json(text):
-    try:
-        obj = json.loads(text)
-        return required_keys_exist(obj)
-    except Exception:
-        return False
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">is_valid_json</span><span class="token punctuation">(</span>text<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">try</span><span class="token punctuation">:</span>
+        obj <span class="token operator">=</span> json<span class="token punctuation">.</span>loads<span class="token punctuation">(</span>text<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> required_keys_exist<span class="token punctuation">(</span>obj<span class="token punctuation">)</span>
+    <span class="token keyword">except</span> Exception<span class="token punctuation">:</span>
+        <span class="token keyword">return</span> <span class="token boolean">False</span>
 
-valid_count = 0
+valid_count <span class="token operator">=</span> <span class="token number">0</span>
 
-for item in test_set:
-    pred = model_generate(item["input"])
-    if is_valid_json(pred):
-        valid_count += 1
+<span class="token keyword">for</span> item <span class="token keyword">in</span> test_set<span class="token punctuation">:</span>
+    pred <span class="token operator">=</span> model_generate<span class="token punctuation">(</span>item<span class="token punctuation">[</span><span class="token string">"input"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> is_valid_json<span class="token punctuation">(</span>pred<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        valid_count <span class="token operator">+=</span> <span class="token number">1</span>
 
-json_valid_rate = valid_count / len(test_set)
-</code></pre>
+json_valid_rate <span class="token operator">=</span> valid_count <span class="token operator">/</span> <span class="token builtin">len</span><span class="token punctuation">(</span>test_set<span class="token punctuation">)</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <h3 id="分类指标"><a id="分类指标" class="anchor" aria-hidden="true" href="#分类指标"><span class="octicon octicon-link"></span></a>分类指标</h3>
 <p>如果任务包含分类字段，可以计算准确率、精确率、召回率和 F1。</p>
-<pre class="line-numbers" data-language="python"><code class="language-python">pred_labels = []
-gold_labels = []
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">pred_labels <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+gold_labels <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
 
-for item in test_set:
-    pred = parse_json(model_generate(item["input"]))
-    pred_labels.append(pred["label"])
-    gold_labels.append(item["output"]["label"])
+<span class="token keyword">for</span> item <span class="token keyword">in</span> test_set<span class="token punctuation">:</span>
+    pred <span class="token operator">=</span> parse_json<span class="token punctuation">(</span>model_generate<span class="token punctuation">(</span>item<span class="token punctuation">[</span><span class="token string">"input"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    pred_labels<span class="token punctuation">.</span>append<span class="token punctuation">(</span>pred<span class="token punctuation">[</span><span class="token string">"label"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    gold_labels<span class="token punctuation">.</span>append<span class="token punctuation">(</span>item<span class="token punctuation">[</span><span class="token string">"output"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">"label"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
 
-report = classification_report(gold_labels, pred_labels)
-print(report)
-</code></pre>
+report <span class="token operator">=</span> classification_report<span class="token punctuation">(</span>gold_labels<span class="token punctuation">,</span> pred_labels<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>report<span class="token punctuation">)</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <p>常见指标含义：</p>
 <table>
 <thead>
@@ -659,12 +659,12 @@ print(report)
 </tbody>
 </table>
 <p>合并伪代码：</p>
-<pre class="line-numbers" data-language="python"><code class="language-python">base_model = load_base_model("path/to/base-model")
-adapter = load_lora_adapter(base_model, "output/task-lora")
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">base_model <span class="token operator">=</span> load_base_model<span class="token punctuation">(</span><span class="token string">"path/to/base-model"</span><span class="token punctuation">)</span>
+adapter <span class="token operator">=</span> load_lora_adapter<span class="token punctuation">(</span>base_model<span class="token punctuation">,</span> <span class="token string">"output/task-lora"</span><span class="token punctuation">)</span>
 
-merged_model = merge_adapter(base_model, adapter)
-merged_model.save_pretrained("output/task-merged")
-</code></pre>
+merged_model <span class="token operator">=</span> merge_adapter<span class="token punctuation">(</span>base_model<span class="token punctuation">,</span> adapter<span class="token punctuation">)</span>
+merged_model<span class="token punctuation">.</span>save_pretrained<span class="token punctuation">(</span><span class="token string">"output/task-merged"</span><span class="token punctuation">)</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></pre>
 <p>部署前需要验证：</p>
 <ul>
 <li>模型能正常加载</li>
@@ -1212,20 +1212,4 @@ merged_model.save_pretrained("output/task-merged")
 
   btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
   window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
-})()</script></div><script>(() => {
-  const $article = document.getElementById('article-container')
-  if (!$article || $article.querySelector('.hbe-container')) return
-
-  window.Prism = window.Prism || {}
-  window.Prism.manual = true
-
-  const highlightAll = () => {
-    // window.Prism.highlightAll()
-    window.Prism.highlightAllUnder($article, true)
-  }
-
-  document.addEventListener('DOMContentLoaded', highlightAll, { once: true })
-  btf.addGlobalFn('pjaxComplete', highlightAll, 'prismjs')
-  btf.addGlobalFn('encrypt', highlightAll, 'prismjs')
-})()
-</script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-bash.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-python.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-json.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-ini.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.js" defer="defer"></script><script src="/js/profile-panel.js?v=13"></script><script src="/js/sidebar-widgets.js?v=7"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.6.1"></script></div></div></body></html>
+})()</script></div><script src="/js/profile-panel.js?v=13"></script><script src="/js/sidebar-widgets.js?v=7"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.6.1"></script></div></div></body></html>

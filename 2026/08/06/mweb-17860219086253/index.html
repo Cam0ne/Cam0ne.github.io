@@ -222,19 +222,19 @@
 <p>模型服务通常不应该裸露在公网。</p>
 <h3 id="模型目录怎么管理"><a id="模型目录怎么管理" class="anchor" aria-hidden="true" href="#模型目录怎么管理"><span class="octicon octicon-link"></span></a>模型目录怎么管理</h3>
 <p>建议把运行环境、模型文件、日志文件分开放：</p>
-<pre class="line-numbers" data-language="text"><code class="language-text">~/ai-runtime/
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">~/ai-runtime/
 ├── vllm_env/
 ├── models/
-│   └── &lt;model-dir&gt;/
+│   └── &lt;model-dir>/
 └── logs/
     └── vllm.log
-</code></pre>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <p>后续升级模型、回滚版本、定位日志都会更清楚。</p>
 <hr>
 <h2 id="检查gpu环境"><a id="检查gpu环境" class="anchor" aria-hidden="true" href="#检查gpu环境"><span class="octicon octicon-link"></span></a>检查 GPU 环境</h2>
 <p>先确认系统能识别 NVIDIA GPU：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">nvidia-smi
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">nvidia-smi
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span></span></pre>
 <p>重点关注：</p>
 <ul>
 <li>Driver Version：驱动是否正常</li>
@@ -246,34 +246,34 @@
 <hr>
 <h2 id="创建独立python环境"><a id="创建独立python环境" class="anchor" aria-hidden="true" href="#创建独立python环境"><span class="octicon octicon-link"></span></a>创建独立 Python 环境</h2>
 <p>建议为 vLLM 单独创建虚拟环境：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">mkdir -p ~/ai-runtime
-cd ~/ai-runtime
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">mkdir</span> <span class="token parameter variable">-p</span> ~/ai-runtime
+<span class="token builtin class-name">cd</span> ~/ai-runtime
 
-python3 -m venv vllm_env
-source vllm_env/bin/activate
-python -m pip install -U pip
-</code></pre>
+python3 <span class="token parameter variable">-m</span> venv vllm_env
+<span class="token builtin class-name">source</span> vllm_env/bin/activate
+python <span class="token parameter variable">-m</span> pip <span class="token function">install</span> <span class="token parameter variable">-U</span> pip
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <p>确认当前 Python 指向虚拟环境：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">which python
-python --version
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">which</span> python
+python <span class="token parameter variable">--version</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></pre>
 <p>如果机器上同时存在 Conda、系统 Python、多个项目虚拟环境，这一步很关键。很多依赖问题本质上是装在了错误的 Python 环境里。</p>
 <hr>
 <h2 id="安装pytorch和-vllm"><a id="安装pytorch和-vllm" class="anchor" aria-hidden="true" href="#安装pytorch和-vllm"><span class="octicon octicon-link"></span></a>安装 PyTorch 和 vLLM</h2>
 <p>根据机器 CUDA 环境安装对应版本的 PyTorch。下面是 CUDA 12.1 的示例：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">pip <span class="token function">install</span> torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span></span></pre>
 <p>安装 vLLM：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">pip install vllm
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">pip <span class="token function">install</span> vllm
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span></span></pre>
 <p>Ubuntu 环境通常还需要基础编译依赖：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">sudo apt update
-sudo apt install -y python3-dev build-essential
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt</span> update
+<span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> <span class="token parameter variable">-y</span> python3-dev build-essential
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></pre>
 <p>安装完成后验证：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">python -c "import torch; print(torch.cuda.is_available()); print(torch.version.cuda)"
-python -c "import vllm; print(vllm.__version__)"
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">python <span class="token parameter variable">-c</span> <span class="token string">"import torch; print(torch.cuda.is_available()); print(torch.version.cuda)"</span>
+python <span class="token parameter variable">-c</span> <span class="token string">"import vllm; print(vllm.__version__)"</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></pre>
 <p>期望结果：</p>
 <ul>
 <li><code>torch.cuda.is_available()</code> 输出 <code>True</code></li>
@@ -284,33 +284,33 @@ python -c "import vllm; print(vllm.__version__)"
 <hr>
 <h2 id="下载模型到本地"><a id="下载模型到本地" class="anchor" aria-hidden="true" href="#下载模型到本地"><span class="octicon octicon-link"></span></a>下载模型到本地</h2>
 <p>如果模型在 Hugging Face，可以安装命令行工具：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">pip install -U "huggingface_hub[cli]"
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">pip <span class="token function">install</span> <span class="token parameter variable">-U</span> <span class="token string">"huggingface_hub[cli]"</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span></span></pre>
 <p>按需设置镜像：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">export HF_ENDPOINT=&lt;huggingface-mirror-url&gt;
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">export</span> <span class="token assign-left variable">HF_ENDPOINT</span><span class="token operator">=</span><span class="token operator">&lt;</span>huggingface-mirror-url<span class="token operator">></span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span></span></pre>
 <p>下载模型：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">huggingface-cli download --resume-download &lt;model-id&gt; --local-dir ./models/&lt;model-dir&gt;
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">huggingface-cli download --resume-download <span class="token operator">&lt;</span>model-id<span class="token operator">></span> --local-dir ./models/<span class="token operator">&lt;</span>model-dir<span class="token operator">></span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span></span></pre>
 <p>这里有两个占位符：</p>
 <ul>
 <li><code>&lt;model-id&gt;</code>：远程模型 ID，例如某个组织下的模型名称</li>
 <li><code>&lt;model-dir&gt;</code>：本地保存目录，建议和模型版本对应</li>
 </ul>
 <p>下载后检查文件：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">ls -lh ./models/&lt;model-dir&gt;
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">ls</span> <span class="token parameter variable">-lh</span> ./models/<span class="token operator">&lt;</span>model-dir<span class="token operator">></span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span></span></pre>
 <p>通常至少要看到配置文件、tokenizer 文件和权重文件。如果目录里只有部分文件，启动时可能会报 tokenizer、config 或 weight 读取错误。</p>
 <hr>
 <h2 id="启动基础推理服务"><a id="启动基础推理服务" class="anchor" aria-hidden="true" href="#启动基础推理服务"><span class="octicon octicon-link"></span></a>启动基础推理服务</h2>
 <p>单卡启动模板：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">CUDA_VISIBLE_DEVICES=0 vllm serve ./models/&lt;model-dir&gt; \
-  --served-model-name &lt;model-name&gt; \
-  --host 127.0.0.1 \
-  --port 8000 \
-  --tensor-parallel-size 1 \
-  --dtype auto
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">CUDA_VISIBLE_DEVICES</span><span class="token operator">=</span><span class="token number">0</span> vllm serve ./models/<span class="token operator">&lt;</span>model-dir<span class="token operator">></span> <span class="token punctuation">\</span>
+  --served-model-name <span class="token operator">&lt;</span>model-name<span class="token operator">></span> <span class="token punctuation">\</span>
+  <span class="token parameter variable">--host</span> <span class="token number">127.0</span>.0.1 <span class="token punctuation">\</span>
+  <span class="token parameter variable">--port</span> <span class="token number">8000</span> <span class="token punctuation">\</span>
+  --tensor-parallel-size <span class="token number">1</span> <span class="token punctuation">\</span>
+  <span class="token parameter variable">--dtype</span> auto
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <p>参数说明：</p>
 <ul>
 <li><code>CUDA_VISIBLE_DEVICES=0</code>：指定使用第 0 张 GPU</li>
@@ -322,19 +322,19 @@ python -c "import vllm; print(vllm.__version__)"
 <li><code>--dtype auto</code>：让 vLLM 根据模型和硬件自动选择精度</li>
 </ul>
 <p>如果明确知道硬件支持 bf16，也可以指定：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">--dtype bfloat16
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token parameter variable">--dtype</span> bfloat16
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span></span></pre>
 <p>调试阶段建议先用 <code>127.0.0.1</code>。确认服务稳定后，再根据访问范围决定是否改成 <code>0.0.0.0</code>。</p>
 <hr>
 <h2 id="多卡部署模板"><a id="多卡部署模板" class="anchor" aria-hidden="true" href="#多卡部署模板"><span class="octicon octicon-link"></span></a>多卡部署模板</h2>
 <p>多卡推理时，选择参与服务的 GPU，并设置 tensor parallel 数量：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">CUDA_VISIBLE_DEVICES=0,1 vllm serve ./models/&lt;model-dir&gt; \
-  --served-model-name &lt;model-name&gt; \
-  --host 127.0.0.1 \
-  --port 8000 \
-  --tensor-parallel-size 2 \
-  --dtype auto
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">CUDA_VISIBLE_DEVICES</span><span class="token operator">=</span><span class="token number">0,1</span> vllm serve ./models/<span class="token operator">&lt;</span>model-dir<span class="token operator">></span> <span class="token punctuation">\</span>
+  --served-model-name <span class="token operator">&lt;</span>model-name<span class="token operator">></span> <span class="token punctuation">\</span>
+  <span class="token parameter variable">--host</span> <span class="token number">127.0</span>.0.1 <span class="token punctuation">\</span>
+  <span class="token parameter variable">--port</span> <span class="token number">8000</span> <span class="token punctuation">\</span>
+  --tensor-parallel-size <span class="token number">2</span> <span class="token punctuation">\</span>
+  <span class="token parameter variable">--dtype</span> auto
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <p>注意两点：</p>
 <ul>
 <li><code>CUDA_VISIBLE_DEVICES</code> 里有几张卡，<code>--tensor-parallel-size</code> 通常就设置为几</li>
@@ -344,51 +344,51 @@ python -c "import vllm; print(vllm.__version__)"
 <hr>
 <h2 id="验证openai兼容接口"><a id="验证openai兼容接口" class="anchor" aria-hidden="true" href="#验证openai兼容接口"><span class="octicon octicon-link"></span></a>验证 OpenAI 兼容接口</h2>
 <p>vLLM 启动后，可以先看模型列表：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">curl http://127.0.0.1:8000/v1/models
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">curl</span> http://127.0.0.1:8000/v1/models
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span></span></pre>
 <p>再测试 Chat Completions：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">curl http://127.0.0.1:8000/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '&#123;
-    "model": "&lt;model-name&gt;",
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">curl</span> http://127.0.0.1:8000/v1/chat/completions <span class="token punctuation">\</span>
+  <span class="token parameter variable">-H</span> <span class="token string">"Content-Type: application/json"</span> <span class="token punctuation">\</span>
+  <span class="token parameter variable">-d</span> <span class="token string">'{
+    "model": "&lt;model-name>",
     "messages": [
-      &#123;"role": "user", "content": "用一句话说明 vLLM 的作用"&#125;
+      {"role": "user", "content": "用一句话说明 vLLM 的作用"}
     ],
     "temperature": 0.7
-  &#125;'
-</code></pre>
+  }'</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <p>如果请求报模型不存在，优先检查 <code>/v1/models</code> 返回的 ID，并确保请求里的 <code>"model"</code> 字段和它一致。</p>
 <p>Python 调用示例：</p>
-<pre class="line-numbers" data-language="python"><code class="language-python">from openai import OpenAI
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> openai <span class="token keyword">import</span> OpenAI
 
-client = OpenAI(
-    base_url="http://127.0.0.1:8000/v1",
-    api_key="EMPTY",
-)
+client <span class="token operator">=</span> OpenAI<span class="token punctuation">(</span>
+    base_url<span class="token operator">=</span><span class="token string">"http://127.0.0.1:8000/v1"</span><span class="token punctuation">,</span>
+    api_key<span class="token operator">=</span><span class="token string">"EMPTY"</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span>
 
-resp = client.chat.completions.create(
-    model="&lt;model-name&gt;",
-    messages=[
-        &#123;"role": "user", "content": "用一句话说明 vLLM 的作用"&#125;
-    ],
-    temperature=0.7,
-)
+resp <span class="token operator">=</span> client<span class="token punctuation">.</span>chat<span class="token punctuation">.</span>completions<span class="token punctuation">.</span>create<span class="token punctuation">(</span>
+    model<span class="token operator">=</span><span class="token string">"&lt;model-name>"</span><span class="token punctuation">,</span>
+    messages<span class="token operator">=</span><span class="token punctuation">[</span>
+        <span class="token punctuation">{</span><span class="token string">"role"</span><span class="token punctuation">:</span> <span class="token string">"user"</span><span class="token punctuation">,</span> <span class="token string">"content"</span><span class="token punctuation">:</span> <span class="token string">"用一句话说明 vLLM 的作用"</span><span class="token punctuation">}</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    temperature<span class="token operator">=</span><span class="token number">0.7</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span>
 
-print(resp.choices[0].message.content)
-</code></pre>
+<span class="token keyword">print</span><span class="token punctuation">(</span>resp<span class="token punctuation">.</span>choices<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>message<span class="token punctuation">.</span>content<span class="token punctuation">)</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <p>本地无鉴权时，<code>api_key</code> 可以填占位值。如果服务端配置了 API Key，客户端要同步修改。</p>
 <hr>
 <h2 id="常用性能参数"><a id="常用性能参数" class="anchor" aria-hidden="true" href="#常用性能参数"><span class="octicon octicon-link"></span></a>常用性能参数</h2>
 <p>基础服务跑通后，再考虑调性能。常见参数如下：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">vllm serve ./models/&lt;model-dir&gt; \
-  --served-model-name &lt;model-name&gt; \
-  --host 127.0.0.1 \
-  --port 8000 \
-  --tensor-parallel-size 1 \
-  --dtype auto \
-  --max-model-len 8192 \
-  --gpu-memory-utilization 0.90
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">vllm serve ./models/<span class="token operator">&lt;</span>model-dir<span class="token operator">></span> <span class="token punctuation">\</span>
+  --served-model-name <span class="token operator">&lt;</span>model-name<span class="token operator">></span> <span class="token punctuation">\</span>
+  <span class="token parameter variable">--host</span> <span class="token number">127.0</span>.0.1 <span class="token punctuation">\</span>
+  <span class="token parameter variable">--port</span> <span class="token number">8000</span> <span class="token punctuation">\</span>
+  --tensor-parallel-size <span class="token number">1</span> <span class="token punctuation">\</span>
+  <span class="token parameter variable">--dtype</span> auto <span class="token punctuation">\</span>
+  --max-model-len <span class="token number">8192</span> <span class="token punctuation">\</span>
+  --gpu-memory-utilization <span class="token number">0.90</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <p>参数含义：</p>
 <ul>
 <li><code>--max-model-len</code>：限制最大上下文长度，越大越占显存</li>
@@ -413,22 +413,22 @@ print(resp.choices[0].message.content)
 <li>请求中的 <code>tools</code> Schema 写得足够清晰</li>
 </ul>
 <p>通用启动模板：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">vllm serve ./models/&lt;model-dir&gt; \
-  --served-model-name &lt;model-name&gt; \
-  --host 127.0.0.1 \
-  --port 8000 \
-  --tensor-parallel-size 1 \
-  --dtype auto \
-  --enable-auto-tool-choice \
-  --tool-call-parser &lt;tool-parser&gt;
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">vllm serve ./models/<span class="token operator">&lt;</span>model-dir<span class="token operator">></span> <span class="token punctuation">\</span>
+  --served-model-name <span class="token operator">&lt;</span>model-name<span class="token operator">></span> <span class="token punctuation">\</span>
+  <span class="token parameter variable">--host</span> <span class="token number">127.0</span>.0.1 <span class="token punctuation">\</span>
+  <span class="token parameter variable">--port</span> <span class="token number">8000</span> <span class="token punctuation">\</span>
+  --tensor-parallel-size <span class="token number">1</span> <span class="token punctuation">\</span>
+  <span class="token parameter variable">--dtype</span> auto <span class="token punctuation">\</span>
+  --enable-auto-tool-choice <span class="token punctuation">\</span>
+  --tool-call-parser <span class="token operator">&lt;</span>tool-parser<span class="token operator">></span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <p>这里的 <code>&lt;tool-parser&gt;</code> 不能随便填，需要根据模型类型和 vLLM 文档选择。常见取值可能包括 <code>hermes</code>、<code>mistral</code>、<code>llama3_json</code>、<code>qwen3_xml</code> 等，具体以当前 vLLM 版本支持列表为准。</p>
 <p>如果只是普通问答、摘要、分类、信息抽取，不需要开启工具调用。工具调用主要用于 Agent、自动化编排、查询外部系统等场景。</p>
 <hr>
 <h2 id="服务访问控制"><a id="服务访问控制" class="anchor" aria-hidden="true" href="#服务访问控制"><span class="octicon octicon-link"></span></a>服务访问控制</h2>
 <p>调试完成后，如果要给其他机器访问，需要把监听地址改成：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">--host 0.0.0.0
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token parameter variable">--host</span> <span class="token number">0.0</span>.0.0
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span></span></pre>
 <p>但这只解决“能访问”的问题，不解决“谁能访问”的问题。建议至少做一层访问控制：</p>
 <ul>
 <li>只在内网开放端口</li>
@@ -438,69 +438,69 @@ print(resp.choices[0].message.content)
 <li>给外部访问加 HTTPS</li>
 </ul>
 <p>vLLM 支持通过参数设置 API Key：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">vllm serve ./models/&lt;model-dir&gt; \
-  --served-model-name &lt;model-name&gt; \
-  --host 0.0.0.0 \
-  --port 8000 \
-  --api-key &lt;api-key&gt;
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">vllm serve ./models/<span class="token operator">&lt;</span>model-dir<span class="token operator">></span> <span class="token punctuation">\</span>
+  --served-model-name <span class="token operator">&lt;</span>model-name<span class="token operator">></span> <span class="token punctuation">\</span>
+  <span class="token parameter variable">--host</span> <span class="token number">0.0</span>.0.0 <span class="token punctuation">\</span>
+  <span class="token parameter variable">--port</span> <span class="token number">8000</span> <span class="token punctuation">\</span>
+  --api-key <span class="token operator">&lt;</span>api-key<span class="token operator">></span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></pre>
 <p>客户端调用时带上：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">curl http://&lt;server-ip&gt;:8000/v1/models \
-  -H "Authorization: Bearer &lt;api-key&gt;"
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">curl</span> http://<span class="token operator">&lt;</span>server-ip<span class="token operator">></span>:8000/v1/models <span class="token punctuation">\</span>
+  <span class="token parameter variable">-H</span> <span class="token string">"Authorization: Bearer &lt;api-key>"</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></pre>
 <p>模型服务不要直接暴露到公网裸奔。即使只是内测，也应该限制来源 IP 或加鉴权。</p>
 <hr>
 <h2 id="后台运行和日志"><a id="后台运行和日志" class="anchor" aria-hidden="true" href="#后台运行和日志"><span class="octicon octicon-link"></span></a>后台运行和日志</h2>
 <p>临时后台运行可以用 <code>nohup</code>：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">mkdir -p ~/ai-runtime/logs
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">mkdir</span> <span class="token parameter variable">-p</span> ~/ai-runtime/logs
 
-nohup vllm serve ./models/&lt;model-dir&gt; \
-  --served-model-name &lt;model-name&gt; \
-  --host 127.0.0.1 \
-  --port 8000 \
-  --tensor-parallel-size 1 \
-  --dtype auto \
-  &gt; ~/ai-runtime/logs/vllm.log 2&gt;&amp;1 &amp;
-</code></pre>
+<span class="token function">nohup</span> vllm serve ./models/<span class="token operator">&lt;</span>model-dir<span class="token operator">></span> <span class="token punctuation">\</span>
+  --served-model-name <span class="token operator">&lt;</span>model-name<span class="token operator">></span> <span class="token punctuation">\</span>
+  <span class="token parameter variable">--host</span> <span class="token number">127.0</span>.0.1 <span class="token punctuation">\</span>
+  <span class="token parameter variable">--port</span> <span class="token number">8000</span> <span class="token punctuation">\</span>
+  --tensor-parallel-size <span class="token number">1</span> <span class="token punctuation">\</span>
+  <span class="token parameter variable">--dtype</span> auto <span class="token punctuation">\</span>
+  <span class="token operator">></span> ~/ai-runtime/logs/vllm.log <span class="token operator"><span class="token file-descriptor important">2</span>></span><span class="token file-descriptor important">&amp;1</span> <span class="token operator">&amp;</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <p>查看日志：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">tail -f ~/ai-runtime/logs/vllm.log
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">tail</span> <span class="token parameter variable">-f</span> ~/ai-runtime/logs/vllm.log
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span></span></pre>
 <p>查看进程：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">ps aux | grep "vllm serve"
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">ps</span> aux <span class="token operator">|</span> <span class="token function">grep</span> <span class="token string">"vllm serve"</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span></span></pre>
 <p>停止服务：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">pkill -f "vllm serve"
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">pkill</span> <span class="token parameter variable">-f</span> <span class="token string">"vllm serve"</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span></span></pre>
 <p>如果是长期服务，建议使用 <code>systemd</code>、Docker、Kubernetes 或其他进程管理工具。<code>nohup</code> 适合测试，不适合严肃生产环境。</p>
 <hr>
 <h2 id="systemd托管示例"><a id="systemd托管示例" class="anchor" aria-hidden="true" href="#systemd托管示例"><span class="octicon octicon-link"></span></a>systemd 托管示例</h2>
 <p>单机长期运行可以写一个 systemd service：</p>
-<pre class="line-numbers" data-language="ini"><code class="language-ini">[Unit]
-Description=vLLM OpenAI Compatible Server
-After=network.target
+<pre class="line-numbers language-ini" data-language="ini"><code class="language-ini"><span class="token section"><span class="token punctuation">[</span><span class="token section-name selector">Unit</span><span class="token punctuation">]</span></span>
+<span class="token key attr-name">Description</span><span class="token punctuation">=</span><span class="token value attr-value">vLLM OpenAI Compatible Server</span>
+<span class="token key attr-name">After</span><span class="token punctuation">=</span><span class="token value attr-value">network.target</span>
 
-[Service]
-Type=simple
-WorkingDirectory=/home/&lt;user&gt;/ai-runtime
-Environment="CUDA_VISIBLE_DEVICES=0"
-ExecStart=/home/&lt;user&gt;/ai-runtime/vllm_env/bin/vllm serve /home/&lt;user&gt;/ai-runtime/models/&lt;model-dir&gt; --served-model-name &lt;model-name&gt; --host 127.0.0.1 --port 8000 --tensor-parallel-size 1 --dtype auto
-Restart=always
-RestartSec=5
+<span class="token section"><span class="token punctuation">[</span><span class="token section-name selector">Service</span><span class="token punctuation">]</span></span>
+<span class="token key attr-name">Type</span><span class="token punctuation">=</span><span class="token value attr-value">simple</span>
+<span class="token key attr-name">WorkingDirectory</span><span class="token punctuation">=</span><span class="token value attr-value">/home/&lt;user>/ai-runtime</span>
+<span class="token key attr-name">Environment</span><span class="token punctuation">=</span><span class="token value attr-value">"<span class="token inner-value">CUDA_VISIBLE_DEVICES=0</span>"</span>
+<span class="token key attr-name">ExecStart</span><span class="token punctuation">=</span><span class="token value attr-value">/home/&lt;user>/ai-runtime/vllm_env/bin/vllm serve /home/&lt;user>/ai-runtime/models/&lt;model-dir> --served-model-name &lt;model-name> --host 127.0.0.1 --port 8000 --tensor-parallel-size 1 --dtype auto</span>
+<span class="token key attr-name">Restart</span><span class="token punctuation">=</span><span class="token value attr-value">always</span>
+<span class="token key attr-name">RestartSec</span><span class="token punctuation">=</span><span class="token value attr-value">5</span>
 
-[Install]
-WantedBy=multi-user.target
-</code></pre>
+<span class="token section"><span class="token punctuation">[</span><span class="token section-name selector">Install</span><span class="token punctuation">]</span></span>
+<span class="token key attr-name">WantedBy</span><span class="token punctuation">=</span><span class="token value attr-value">multi-user.target</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
 <p>保存为：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">/etc/systemd/system/vllm.service
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">/etc/systemd/system/vllm.service
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span></span></pre>
 <p>启动并设置开机自启：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">sudo systemctl daemon-reload
-sudo systemctl enable --now vllm
-sudo systemctl status vllm
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> systemctl daemon-reload
+<span class="token function">sudo</span> systemctl <span class="token builtin class-name">enable</span> <span class="token parameter variable">--now</span> vllm
+<span class="token function">sudo</span> systemctl status vllm
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></pre>
 <p>查看日志：</p>
-<pre class="line-numbers" data-language="bash"><code class="language-bash">journalctl -u vllm -f
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">journalctl <span class="token parameter variable">-u</span> vllm <span class="token parameter variable">-f</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span></span></pre>
 <p>systemd 的好处是进程异常退出后可以自动拉起，也更方便统一查看状态和日志。</p>
 <hr>
 <h2 id="部署总结"><a id="部署总结" class="anchor" aria-hidden="true" href="#部署总结"><span class="octicon octicon-link"></span></a>部署总结</h2>
@@ -977,20 +977,4 @@ sudo systemctl status vllm
 
   btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
   window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
-})()</script></div><script>(() => {
-  const $article = document.getElementById('article-container')
-  if (!$article || $article.querySelector('.hbe-container')) return
-
-  window.Prism = window.Prism || {}
-  window.Prism.manual = true
-
-  const highlightAll = () => {
-    // window.Prism.highlightAll()
-    window.Prism.highlightAllUnder($article, true)
-  }
-
-  document.addEventListener('DOMContentLoaded', highlightAll, { once: true })
-  btf.addGlobalFn('pjaxComplete', highlightAll, 'prismjs')
-  btf.addGlobalFn('encrypt', highlightAll, 'prismjs')
-})()
-</script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-bash.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-python.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-json.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-ini.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.js" defer="defer"></script><script src="/js/profile-panel.js?v=13"></script><script src="/js/sidebar-widgets.js?v=7"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.6.1"></script></div></div></body></html>
+})()</script></div><script src="/js/profile-panel.js?v=13"></script><script src="/js/sidebar-widgets.js?v=7"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.6.1"></script></div></div></body></html>
