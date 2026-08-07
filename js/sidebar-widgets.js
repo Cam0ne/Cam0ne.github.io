@@ -111,6 +111,36 @@
     if (webinfoCard) rightColumn.appendChild(webinfoCard)
   }
 
+  function syncMobileSidebarCards() {
+    var sidebar = document.getElementById('sidebar-menus')
+    var aside = document.getElementById('aside-content')
+    if (!sidebar || !aside) return
+
+    var existing = sidebar.querySelector('.mweb-sidebar-widgets')
+    if (existing) existing.remove()
+
+    if (!window.matchMedia('(max-width: 768px)').matches) return
+
+    var sourceCards = [
+      aside.querySelector('.card-recent-post'),
+      aside.querySelector('.card-categories'),
+      aside.querySelector('.card-tags')
+    ].filter(Boolean)
+
+    if (!sourceCards.length) return
+
+    var wrap = document.createElement('div')
+    wrap.className = 'mweb-sidebar-widgets'
+
+    sourceCards.forEach(function (card) {
+      var cloned = card.cloneNode(true)
+      cloned.classList.add('mweb-sidebar-card')
+      wrap.appendChild(cloned)
+    })
+
+    sidebar.appendChild(wrap)
+  }
+
   function renderCalendar(data) {
     var root = document.getElementById('cam-calendar-card')
     if (!root) return
@@ -158,6 +188,7 @@
 
   function init() {
     insertCards()
+    syncMobileSidebarCards()
     loadCalendar()
     loadHitokoto()
   }
@@ -169,4 +200,5 @@
   }
 
   document.addEventListener('pjax:complete', init)
+  window.addEventListener('resize', syncMobileSidebarCards)
 })()
