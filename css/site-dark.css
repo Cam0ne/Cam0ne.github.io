@@ -587,11 +587,12 @@ html[data-theme='dark'] #article-container code {
 }
 
 html[data-theme='dark'] figure.highlight .code pre,
-html[data-theme='dark'] #article-container pre[class*='language-'] {
+html[data-theme='dark'] #article-container pre[class*='language-'],
+html[data-theme='dark'] #article-container pre.line-numbers {
   padding: 18px 22px;
 }
 
-html[data-theme='dark'] #article-container pre[class*='language-'].line-numbers {
+html[data-theme='dark'] #article-container pre.line-numbers {
   box-sizing: border-box;
   padding: 18px 22px 18px 5.8em;
   line-height: 1.68;
@@ -599,7 +600,7 @@ html[data-theme='dark'] #article-container pre[class*='language-'].line-numbers 
   tab-size: 2;
 }
 
-html[data-theme='dark'] #article-container pre[class*='language-'].line-numbers > code {
+html[data-theme='dark'] #article-container pre.line-numbers > code {
   display: block;
   position: relative;
   line-height: inherit;
@@ -607,7 +608,7 @@ html[data-theme='dark'] #article-container pre[class*='language-'].line-numbers 
   tab-size: inherit;
 }
 
-html[data-theme='dark'] #article-container pre[class*='language-'].line-numbers .line-numbers-rows {
+html[data-theme='dark'] #article-container pre.line-numbers .line-numbers-rows {
   top: 18px;
   left: -5.8em;
   width: 4.6em;
@@ -616,13 +617,13 @@ html[data-theme='dark'] #article-container pre[class*='language-'].line-numbers 
   line-height: inherit;
 }
 
-html[data-theme='dark'] #article-container pre[class*='language-'].line-numbers .line-numbers-rows > span {
+html[data-theme='dark'] #article-container pre.line-numbers .line-numbers-rows > span {
   display: block;
   height: 1.68em;
   line-height: 1.68;
 }
 
-html[data-theme='dark'] #article-container pre[class*='language-'].line-numbers .line-numbers-rows > span::before {
+html[data-theme='dark'] #article-container pre.line-numbers .line-numbers-rows > span::before {
   display: block;
   padding-right: 1.25em;
   color: #8aa0ba;
