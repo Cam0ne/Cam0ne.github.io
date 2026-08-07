@@ -592,18 +592,22 @@ html[data-theme='dark'] #article-container pre[class*='language-'] {
 }
 
 html[data-theme='dark'] #article-container pre[class*='language-'].line-numbers {
-  padding: 18px 22px 18px 4.8em;
+  padding: 18px 22px 18px 5.4em;
+}
+
+html[data-theme='dark'] #article-container pre[class*='language-'].line-numbers > code {
+  position: relative;
 }
 
 html[data-theme='dark'] #article-container pre[class*='language-'].line-numbers .line-numbers-rows {
   top: 18px;
-  left: 0;
-  width: 3.8em;
+  left: -5.4em;
+  width: 4.2em;
   border-right: 1px solid rgba(148, 163, 184, .14);
 }
 
 html[data-theme='dark'] #article-container pre[class*='language-'].line-numbers .line-numbers-rows > span::before {
-  padding-right: 1em;
+  padding-right: 1.1em;
   color: #526071;
 }
 
