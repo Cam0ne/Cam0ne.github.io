@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-08-07T07:15:43.495Z",
-  "totalPosts": 2,
-  "totalTags": 2,
-  "totalCategories": 1,
+  "generatedAt": "2026-08-07T07:59:28.482Z",
+  "totalPosts": 3,
+  "totalTags": 3,
+  "totalCategories": 2,
   "skills": [
     {
       "name": "部署",
@@ -13,6 +13,11 @@
       "name": "大模型",
       "count": 1,
       "score": 100
+    },
+    {
+      "name": "汇编基础",
+      "count": 1,
+      "score": 100
     }
   ],
   "categories": [
@@ -20,6 +25,11 @@
       "name": "AI开发",
       "count": 2,
       "score": 100
+    },
+    {
+      "name": "逆向",
+      "count": 1,
+      "score": 50
     }
   ],
   "heatmap": [
@@ -30,12 +40,16 @@
     {
       "date": "2026-08-06",
       "count": 1
+    },
+    {
+      "date": "2026-08-07",
+      "count": 1
     }
   ],
   "months": [
     {
       "month": "2026-08",
-      "count": 2
+      "count": 3
     }
   ]
 }
