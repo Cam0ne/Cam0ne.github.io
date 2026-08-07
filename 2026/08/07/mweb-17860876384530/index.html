@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cam0ne.github.io/img/camer.jpg">
 <meta property="article:published_time" content="2026-08-06T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-08-07T09:16:46.022Z">
+<meta property="article:modified_time" content="2026-08-07T09:22:58.636Z">
 <meta property="article:author" content="Camer">
 <meta property="article:tag" content="汇编基础">
 <meta name="twitter:card" content="summary">
@@ -18,7 +18,7 @@
   "url": "https://cam0ne.github.io/2026/08/07/mweb-17860876384530/",
   "image": "https://cam0ne.github.io/img/camer.jpg",
   "datePublished": "2026-08-06T16:00:00.000Z",
-  "dateModified": "2026-08-07T09:16:46.022Z",
+  "dateModified": "2026-08-07T09:22:58.636Z",
   "author": [
     {
       "@type": "Person",
@@ -201,7 +201,7 @@
   isHighlightShrink: false,
   isToc: true,
   pageType: 'post'
-}</script><link rel="stylesheet" href="/css/profile-panel.css?v=10"><link rel="stylesheet" href="/css/site-dark.css?v=34"><meta name="generator" content="Hexo 7.3.0"><link rel="preload" as="image" href="/img/safe2.webp?v=1" fetchpriority="high"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/safe3.webp?v=1);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/camer.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ decoding="async" loading="lazy"></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-id-card"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/safe2.webp?v=1);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/husky.png?v=3" alt="Logo" decoding="async"><span class="site-name">Camer's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">函数调用栈分析(32 位 x86/MSVC)</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-id-card"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">函数调用栈分析(32 位 x86/MSVC)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-08-06T16:00:00.000Z" title="发表于 2026-08-07 00:00:00">2026-08-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-07T09:16:46.022Z" title="更新于 2026-08-07 17:16:46">2026-08-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/">逆向</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout cam-three-column" id="content-inner"><div id="post"><article class="container post-content" id="article-container">
+}</script><link rel="stylesheet" href="/css/profile-panel.css?v=10"><link rel="stylesheet" href="/css/site-dark.css?v=34"><meta name="generator" content="Hexo 7.3.0"><link rel="preload" as="image" href="/img/safe2.webp?v=1" fetchpriority="high"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/safe3.webp?v=1);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/camer.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ decoding="async" loading="lazy"></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-id-card"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/safe2.webp?v=1);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/husky.png?v=3" alt="Logo" decoding="async"><span class="site-name">Camer's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">函数调用栈分析(32 位 x86/MSVC)</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-id-card"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">函数调用栈分析(32 位 x86/MSVC)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-08-06T16:00:00.000Z" title="发表于 2026-08-07 00:00:00">2026-08-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-07T09:22:58.636Z" title="更新于 2026-08-07 17:22:58">2026-08-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/">逆向</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout cam-three-column" id="content-inner"><div id="post"><article class="container post-content" id="article-container">
 <h2 id="基础概念"><a id="基础概念" class="anchor" aria-hidden="true" href="#基础概念"><span class="octicon octicon-link"></span></a>基础概念</h2>
 <p>函数调用约定（Calling Convention）是调用方和被调用方之间的一组规则。它规定了函数调用时几个关键问题：</p>
 <ul>
@@ -263,7 +263,7 @@ int main()
     return 0;
 }
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p><img src="/mweb-media/media/17860876384530/20250304115415.webp" alt="20250304115415" decoding="async" loading="lazy"></p>
+<p><img src="/mweb-media/media/17860876384530/20250304115415.webp?v=a37e90a039" alt="20250304115415" decoding="async" loading="lazy"></p>
 <p>在反汇编中，调用方通常会先压入参数，然后执行 <code>call</code>，函数返回后再调整 <code>esp</code>。</p>
 <pre class="line-numbers language-asm" data-language="asm"><code class="language-asm">push 3
 push 2
@@ -288,7 +288,7 @@ int main()
     return 0;
 }
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p><img src="/mweb-media/media/17860876384530/20250304115615.webp" alt="20250304115615" decoding="async" loading="lazy"></p>
+<p><img src="/mweb-media/media/17860876384530/20250304115615.webp?v=69a14a9bf3" alt="20250304115615" decoding="async" loading="lazy"></p>
 <p>调用方反汇编通常类似这样：</p>
 <pre class="line-numbers language-asm" data-language="asm"><code class="language-asm">push 3
 push 2
@@ -315,7 +315,7 @@ int main()
     return 0;
 }
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p><img src="/mweb-media/media/17860876384530/20250304115821.webp" alt="20250304115821" decoding="async" loading="lazy"></p>
+<p><img src="/mweb-media/media/17860876384530/20250304115821.webp?v=9590a6dc84" alt="20250304115821" decoding="async" loading="lazy"></p>
 <p>典型调用形式可能类似：</p>
 <pre class="line-numbers language-asm" data-language="asm"><code class="language-asm">push 3
 mov  edx, 2
@@ -341,7 +341,7 @@ int main()
     return 0;
 }
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p><img src="/mweb-media/media/17860876384530/20250304120255.webp" alt="20250304120255" decoding="async" loading="lazy"></p>
+<p><img src="/mweb-media/media/17860876384530/20250304120255.webp?v=b5c83da403" alt="20250304120255" decoding="async" loading="lazy"></p>
 <h3 id="参数入栈"><a id="参数入栈" class="anchor" aria-hidden="true" href="#参数入栈"><span class="octicon octicon-link"></span></a>参数入栈</h3>
 <p>对于常见的 32 位栈传参，参数一般从右到左压栈。</p>
 <pre class="line-numbers language-asm" data-language="asm"><code class="language-asm">push 3
@@ -413,8 +413,8 @@ pop ebp
 <p>这表示返回时顺便清理 12 字节参数空间。</p>
 <hr>
 <h2 id="调用栈执行流程"><a id="调用栈执行流程" class="anchor" aria-hidden="true" href="#调用栈执行流程"><span class="octicon octicon-link"></span></a>调用栈执行流程</h2>
-<p><img src="/mweb-media/media/17860876384530/20250304120606.webp" alt="20250304120606" decoding="async" loading="lazy"></p>
-<p><img src="/mweb-media/media/17860876384530/20250304120616.webp" alt="20250304120616" decoding="async" loading="lazy"></p>
+<p><img src="/mweb-media/media/17860876384530/20250304120606.webp?v=20711d311a" alt="20250304120606" decoding="async" loading="lazy"></p>
+<p><img src="/mweb-media/media/17860876384530/20250304120616.webp?v=42ca071a87" alt="20250304120616" decoding="async" loading="lazy"></p>
 <p>一次普通函数调用可以概括为下面 12 个步骤：</p>
 <table>
 <thead>
@@ -500,7 +500,7 @@ jz   short loc_fail
 <p>这类模式在判断函数返回状态时非常常见。</p>
 <hr>
 <h2 id="分析总结"><a id="分析总结" class="anchor" aria-hidden="true" href="#分析总结"><span class="octicon octicon-link"></span></a>分析总结</h2>
-<p><img src="/mweb-media/media/17860876384530/20260711205757.webp" alt="20260711205757" decoding="async" loading="lazy"></p>
+<p><img src="/mweb-media/media/17860876384530/20260711205757.webp?v=29bb49f577" alt="20260711205757" decoding="async" loading="lazy"></p>
 <p>函数调用栈的核心不是死记调用约定，而是理解调用方和被调用方之间如何协作。</p>
 <table>
 <thead>
