@@ -591,6 +591,22 @@ html[data-theme='dark'] #article-container pre[class*='language-'] {
   padding: 18px 22px;
 }
 
+html[data-theme='dark'] #article-container pre[class*='language-'].line-numbers {
+  padding: 18px 22px 18px 4.8em;
+}
+
+html[data-theme='dark'] #article-container pre[class*='language-'].line-numbers .line-numbers-rows {
+  top: 18px;
+  left: 0;
+  width: 3.8em;
+  border-right: 1px solid rgba(148, 163, 184, .14);
+}
+
+html[data-theme='dark'] #article-container pre[class*='language-'].line-numbers .line-numbers-rows > span::before {
+  padding-right: 1em;
+  color: #526071;
+}
+
 html[data-theme='dark'] figure.highlight .gutter pre {
   padding: 18px 12px;
 }
