@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-08-08T04:04:04.457Z",
-  "totalPosts": 3,
-  "totalTags": 3,
+  "generatedAt": "2026-08-08T13:48:23.243Z",
+  "totalPosts": 4,
+  "totalTags": 4,
   "totalCategories": 2,
   "skills": [
     {
@@ -18,18 +18,23 @@
       "name": "汇编基础",
       "count": 1,
       "score": 100
+    },
+    {
+      "name": "C语言",
+      "count": 1,
+      "score": 100
     }
   ],
   "categories": [
     {
-      "name": "AI开发",
+      "name": "逆向",
       "count": 2,
       "score": 100
     },
     {
-      "name": "逆向",
-      "count": 1,
-      "score": 50
+      "name": "AI开发",
+      "count": 2,
+      "score": 100
     }
   ],
   "heatmap": [
@@ -44,12 +49,16 @@
     {
       "date": "2026-08-07",
       "count": 1
+    },
+    {
+      "date": "2026-08-08",
+      "count": 1
     }
   ],
   "months": [
     {
       "month": "2026-08",
-      "count": 3
+      "count": 4
     }
   ]
 }

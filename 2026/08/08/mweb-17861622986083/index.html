@@ -1,0 +1,1206 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>C 语言多维数组寻址原理 | Camer's blog</title><meta name="author" content="Camer"><meta name="copyright" content="Camer"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="基本概述 在 C 语言里，数组不是一个抽象的“表格”，而是一段连续的内存。无论是一维数组、二维数组，还是三维数组，最终都会按照固定规则线性存放。理解这个规则之后，再看数组下标、指针偏移、反汇编中的地址计算，就会清晰很多。 这篇文章从一维数组开始，逐步推导二维、三维以及任意多维数组的寻址公式。 一维数组的内存模型 先看一个一维数组： int ary[5] &#x3D; &#123;1, 2, 3, 4, 5">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C 语言多维数组寻址原理">
+<meta property="og:url" content="https://cam0ne.github.io/2026/08/08/mweb-17861622986083/index.html">
+<meta property="og:site_name" content="Camer&#39;s blog">
+<meta property="og:description" content="基本概述 在 C 语言里，数组不是一个抽象的“表格”，而是一段连续的内存。无论是一维数组、二维数组，还是三维数组，最终都会按照固定规则线性存放。理解这个规则之后，再看数组下标、指针偏移、反汇编中的地址计算，就会清晰很多。 这篇文章从一维数组开始，逐步推导二维、三维以及任意多维数组的寻址公式。 一维数组的内存模型 先看一个一维数组： int ary[5] &#x3D; &#123;1, 2, 3, 4, 5">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cam0ne.github.io/img/camer.jpg">
+<meta property="article:published_time" content="2026-08-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-08T13:48:16.848Z">
+<meta property="article:author" content="Camer">
+<meta property="article:tag" content="C语言">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cam0ne.github.io/img/camer.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "C 语言多维数组寻址原理",
+  "url": "https://cam0ne.github.io/2026/08/08/mweb-17861622986083/",
+  "image": "https://cam0ne.github.io/img/camer.jpg",
+  "datePublished": "2026-08-07T16:00:00.000Z",
+  "dateModified": "2026-08-08T13:48:16.848Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Camer",
+      "url": "https://Cam0ne.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/husky.png?v=3"><link rel="canonical" href="https://cam0ne.github.io/2026/08/08/mweb-17861622986083/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'C 语言多维数组寻址原理',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/profile-panel.css?v=10"><link rel="stylesheet" href="/css/site-dark.css?v=35"><meta name="generator" content="Hexo 7.3.0"><link rel="preload" as="image" href="/img/safe2.webp?v=1" fetchpriority="high"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/safe3.webp?v=1);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/camer.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ decoding="async" loading="lazy"></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-id-card"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/safe2.webp?v=1);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/husky.png?v=3" alt="Logo" decoding="async"><span class="site-name">Camer's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">C 语言多维数组寻址原理</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-id-card"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">C 语言多维数组寻址原理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-08-07T16:00:00.000Z" title="发表于 2026-08-08 00:00:00">2026-08-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-08T13:48:16.848Z" title="更新于 2026-08-08 21:48:16">2026-08-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/">逆向</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout cam-three-column" id="content-inner"><div id="post"><article class="container post-content" id="article-container">
+<h2 id="基本概述"><a id="基本概述" class="anchor" aria-hidden="true" href="#基本概述"><span class="octicon octicon-link"></span></a>基本概述</h2>
+<p>在 C 语言里，数组不是一个抽象的“表格”，而是一段连续的内存。无论是一维数组、二维数组，还是三维数组，最终都会按照固定规则线性存放。理解这个规则之后，再看数组下标、指针偏移、反汇编中的地址计算，就会清晰很多。</p>
+<p>这篇文章从一维数组开始，逐步推导二维、三维以及任意多维数组的寻址公式。</p>
+<h2 id="一维数组的内存模型"><a id="一维数组的内存模型" class="anchor" aria-hidden="true" href="#一维数组的内存模型"><span class="octicon octicon-link"></span></a>一维数组的内存模型</h2>
+<p>先看一个一维数组：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">int ary[5] = {1, 2, 3, 4, 5};
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>如果 <code>int</code> 占 4 字节，那么这个数组在内存中是连续存放的：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">ary[0]  ary[1]  ary[2]  ary[3]  ary[4]
+  1       2       3       4       5
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>数组名 <code>ary</code> 在大多数表达式中会转换为首元素地址，也就是 <code>&amp;ary[0]</code>。访问第 <code>n</code> 个元素时，本质上是在首地址基础上偏移 <code>n</code> 个元素大小。</p>
+<h2 id="一维数组寻址公式"><a id="一维数组寻址公式" class="anchor" aria-hidden="true" href="#一维数组寻址公式"><span class="octicon octicon-link"></span></a>一维数组寻址公式</h2>
+<p>假设存在一个一维数组：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">type ary[M];
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>其中：</p>
+<ul>
+<li><code>type</code> 表示数组元素类型</li>
+<li><code>M</code> 表示数组元素个数</li>
+<li><code>ary</code> 表示数组首元素地址</li>
+<li><code>n</code> 表示目标元素下标</li>
+</ul>
+<p>那么第 <code>n</code> 个元素的地址可以表示为：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[n]
+&amp;= \text{(int)ary} + \text{sizeof(type)} \times n
+\end{aligned}
+\]
+<p>如果元素类型是 <code>int</code>，并且 <code>sizeof(int) = 4</code>，那么：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[n]
+&amp;= \text{(int)ary} + 4 \times n
+\end{aligned}
+\]
+<p>假设数组首地址为 <code>0x0019FE84</code>，则：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[0]
+&amp;= 0x0019FE84 + 4 \times 0 \\
+&amp;= 0x0019FE84
+\end{aligned}
+\]
+\[\begin{aligned}
+\text{\&amp;ary}[1]
+&amp;= 0x0019FE84 + 4 \times 1 \\
+&amp;= 0x0019FE88
+\end{aligned}
+\]
+\[\begin{aligned}
+\text{\&amp;ary}[2]
+&amp;= 0x0019FE84 + 4 \times 2 \\
+&amp;= 0x0019FE8C
+\end{aligned}
+\]
+<p>也就是说，下标不是字节偏移，而是元素偏移。编译器会根据元素类型自动乘上元素大小。</p>
+<h2 id="下标访问的本质"><a id="下标访问的本质" class="anchor" aria-hidden="true" href="#下标访问的本质"><span class="octicon octicon-link"></span></a>下标访问的本质</h2>
+<p>下面两种写法等价：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">ary[n] == *(ary + n)
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><code>ary + n</code> 表示从数组首元素地址开始，向后移动 <code>n</code> 个元素；外层的 <code>*</code> 表示解引用，取出这个地址上的值。</p>
+<p>例如：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">#include &lt;stdio.h>
+
+int main(void) {
+    int ary[5] = {1, 2, 3, 4, 5};
+    int n = 2;
+
+    printf("%d\n", ary[n]);
+    printf("%d\n", *(ary + n));
+
+    return 0;
+}
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>两次输出都是：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">3
+3
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>这也解释了一个反直觉的写法：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">n[ary]
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>它同样成立，因为：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">n[ary] == *(n + ary) == *(ary + n) == ary[n]
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>实际代码不建议这样写，但它能帮助理解数组下标的本质。</p>
+<h2 id="一维数组寻址案例"><a id="一维数组寻址案例" class="anchor" aria-hidden="true" href="#一维数组寻址案例"><span class="octicon octicon-link"></span></a>一维数组寻址案例</h2>
+<p>假设数组首地址为：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">ary = 0x0019FE84
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><img src="/mweb-media/media/17861622986083/20250310151129.webp?v=e96efb9237" alt="20250310151129" decoding="async" loading="lazy"></p>
+<p>代码如下：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">#include &lt;stdio.h>
+
+int main(void) {
+    int ary[5] = {1, 2, 3, 4, 5};
+    int n = 2;
+
+    printf("%p\n", (void *)&amp;ary[3]);
+    printf("%p\n", (void *)&amp;ary[n]);
+    printf("%p\n", (void *)&amp;ary[n + 3]);
+    printf("%p\n", (void *)&amp;ary[n - 3]);
+    printf("%p\n", (void *)&amp;n[ary]);
+
+    return 0;
+}
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>计算 <code>&amp;ary[3]</code>：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[3]
+&amp;= \text{(int)ary} + \text{sizeof(int)} \times 3 \\
+&amp;= 0x0019FE84 + 4 \times 3 \\
+&amp;= 0x0019FE84 + 0xC \\
+&amp;= 0x0019FE90
+\end{aligned}
+\]
+<p>计算 <code>&amp;ary[n]</code>，其中 <code>n = 2</code>：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[n]
+&amp;= \text{\&amp;ary}[2] \\
+&amp;= \text{(int)ary} + \text{sizeof(int)} \times 2 \\
+&amp;= 0x0019FE84 + 4 \times 2 \\
+&amp;= 0x0019FE84 + 0x8 \\
+&amp;= 0x0019FE8C
+\end{aligned}
+\]
+<p>计算 <code>&amp;ary[n + 3]</code>：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[n + 3]
+&amp;= \text{\&amp;ary}[5] \\
+&amp;= \text{(int)ary} + \text{sizeof(int)} \times 5 \\
+&amp;= 0x0019FE84 + 4 \times 5 \\
+&amp;= 0x0019FE84 + 0x14 \\
+&amp;= 0x0019FE98
+\end{aligned}
+\]
+<p>计算 <code>&amp;ary[n - 3]</code>：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[n - 3]
+&amp;= \text{\&amp;ary}[-1] \\
+&amp;= \text{(int)ary} + \text{sizeof(int)} \times (-1) \\
+&amp;= 0x0019FE84 - 0x4 \\
+&amp;= 0x0019FE80
+\end{aligned}
+\]
+<p>计算 <code>&amp;n[ary]</code>：</p>
+\[\begin{aligned}
+\text{\&amp;n}[ary]
+&amp;= \text{\&amp;ary}[n] \\
+&amp;= \text{\&amp;ary}[2] \\
+&amp;= \text{(int)ary} + \text{sizeof(int)} \times 2 \\
+&amp;= 0x0019FE84 + 0x8 \\
+&amp;= 0x0019FE8C
+\end{aligned}
+\]
+<pre class="line-numbers" data-language="c"><code class="language-c" data-meta="showLineNumbers">#include &lt;stdio.h&gt;
+
+int main()
+&#123;
+	int ary[5] = &#123;1,2,3,4,5&#125;;
+
+	int n = 2;
+
+	printf("%p\r\n",&amp;ary[3]);
+
+	// 答： ary[3] = int(ary) + sizeof(int) * 3 = 0x0019FE84 + 0xC(12) = 0x0019FE90
+
+	printf("%p\r\n",&amp;ary[n]);
+
+	// 答： ary[2] = int(ary) + sizeof(int) * 2 = 0x0019FE84 + 0x8 = 0x0019FE8C
+
+	printf("%p\r\n",&amp;ary[n+3]);
+
+	// 答： ary[5] = int(ary) + sizeof(int) * 5 = 0x0019FE84 + 0x14(20) = 0x0019FE98
+
+	printf("%p\r\n",&amp;ary[n-3]);
+
+	// 答： ary[-1] = int(ary) + sizeof(int) * -1 = 0x0019FE84 - 0x4 = 0x0019FE80
+
+	printf("%p\r\n",&amp;n[ary]);
+
+	// 答： n[ary] = ary[n] = int(ary) + sizeof(int) * 2 = 0x0019FE84 + 0x8 = 0x0019FE8C
+
+    return 0;
+&#125;
+</code></pre>
+<p>这里要注意，<code>ary[5]</code> 和 <code>ary[-1]</code> 虽然能按照公式算出地址，但它们已经超出了 <code>int ary[5]</code> 的合法访问范围。数学上能算出地址，不代表程序中可以安全访问。</p>
+<h2 id="二维数组的内存模型"><a id="二维数组的内存模型" class="anchor" aria-hidden="true" href="#二维数组的内存模型"><span class="octicon octicon-link"></span></a>二维数组的内存模型</h2>
+<p>再看二维数组：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">int ary[3][4] = {
+    {1, 2, 3, 4},
+    {5, 6, 7, 8},
+    {9, 10, 11, 12}
+};
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>从逻辑上看，它是 3 行 4 列：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">ary[0][0]  ary[0][1]  ary[0][2]  ary[0][3]
+ary[1][0]  ary[1][1]  ary[1][2]  ary[1][3]
+ary[2][0]  ary[2][1]  ary[2][2]  ary[2][3]
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>但从内存上看，它仍然是一段连续空间，并且按照行优先顺序存放：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">ary[0][0], ary[0][1], ary[0][2], ary[0][3],
+ary[1][0], ary[1][1], ary[1][2], ary[1][3],
+ary[2][0], ary[2][1], ary[2][2], ary[2][3]
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>所谓行优先，就是先放完第 0 行，再放第 1 行，再放第 2 行。</p>
+<h2 id="二维数组寻址公式"><a id="二维数组寻址公式" class="anchor" aria-hidden="true" href="#二维数组寻址公式"><span class="octicon octicon-link"></span></a>二维数组寻址公式</h2>
+<p>假设存在一个二维数组：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">type ary[N][M];
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>其中：</p>
+<ul>
+<li><code>N</code> 表示行数</li>
+<li><code>M</code> 表示每行的列数</li>
+<li><code>type</code> 表示元素类型</li>
+<li><code>x</code> 表示行下标</li>
+<li><code>y</code> 表示列下标</li>
+</ul>
+<p>访问 <code>ary[x][y]</code> 时，需要先跳过前面的 <code>x</code> 行，再进入第 <code>x</code> 行中的第 <code>y</code> 个元素。</p>
+<p>每一行有 <code>M</code> 个元素，所以跳过 <code>x</code> 行需要移动：</p>
+\[\begin{aligned}
+\text{row offset}
+&amp;= \text{sizeof(type)} \times M \times x
+\end{aligned}
+\]
+<p>进入目标行后，再移动 <code>y</code> 个元素：</p>
+\[\begin{aligned}
+\text{column offset}
+&amp;= \text{sizeof(type)} \times y
+\end{aligned}
+\]
+<p>因此二维数组元素地址公式是：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[x][y]
+&amp;= \text{(int)ary} + \text{sizeof(type[M])} \times x + \text{sizeof(type)} \times y
+\end{aligned}
+\]
+<p>由于一行 <code>type[M]</code> 的大小等于 <code>sizeof(type) * M</code>，所以可以继续推导：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[x][y]
+&amp;= \text{(int)ary} + \text{sizeof(type[M])} \times x + \text{sizeof(type)} \times y \\
+&amp;= \text{(int)ary} + \text{sizeof(type)} \times M \times x + \text{sizeof(type)} \times y \\
+&amp;= \text{(int)ary} + \text{sizeof(type)} \times (M \times x + y)
+\end{aligned}
+\]
+<p>也就是说，二维数组下标会被压平成一个一维偏移：</p>
+\[\begin{aligned}
+\text{linear index}
+&amp;= M \times x + y
+\end{aligned}
+\]
+<p><img src="/mweb-media/media/17861622986083/20250304203318.webp?v=8ee742ff70" alt="20250304203318" decoding="async" loading="lazy"></p>
+<h2 id="二维数组寻址案例"><a id="二维数组寻址案例" class="anchor" aria-hidden="true" href="#二维数组寻址案例"><span class="octicon octicon-link"></span></a>二维数组寻址案例</h2>
+<p>假设有如下数组：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">int ary[3][4] = {
+    {1, 2, 3, 4},
+    {5, 6, 7, 8},
+    {9, 10, 11, 12}
+};
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>数组首地址假设为：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">ary = 0x0019FE68
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><img src="/mweb-media/media/17861622986083/20250310151440.webp?v=a0f7ce3e32" alt="20250310151440" decoding="async" loading="lazy"></p>
+<p><code>int</code> 占 4 字节，每行有 4 个 <code>int</code>，所以每行大小是：</p>
+\[\begin{aligned}
+\text{sizeof(int[4])}
+&amp;= \text{sizeof(int)} \times 4 \\
+&amp;= 4 \times 4 \\
+&amp;= 16
+\end{aligned}
+\]
+<p>计算 <code>&amp;ary[1][2]</code>：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[1][2]
+&amp;= \text{(int)ary} + \text{sizeof(int[4])} \times 1 + \text{sizeof(int)} \times 2 \\
+&amp;= 0x0019FE68 + 0x10 + 0x8 \\
+&amp;= 0x0019FE80
+\end{aligned}
+\]
+<p>也可以用压平后的公式计算：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[1][2]
+&amp;= \text{(int)ary} + \text{sizeof(int)} \times (4 \times 1 + 2) \\
+&amp;= 0x0019FE68 + 4 \times 6 \\
+&amp;= 0x0019FE68 + 0x18 \\
+&amp;= 0x0019FE80
+\end{aligned}
+\]
+<p>计算 <code>&amp;ary[2][3]</code>：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[2][3]
+&amp;= \text{(int)ary} + \text{sizeof(int)} \times (4 \times 2 + 3) \\
+&amp;= 0x0019FE68 + 4 \times 11 \\
+&amp;= 0x0019FE68 + 0x2C \\
+&amp;= 0x0019FE94
+\end{aligned}
+\]
+<p>如果下标来自变量：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">int n = 1;
+int m = 2;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>那么 <code>ary[n][m]</code> 等价于 <code>ary[1][2]</code>：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[n][m]
+&amp;= \text{\&amp;ary}[1][2] \\
+&amp;= \text{(int)ary} + \text{sizeof(int[4])} \times 1 + \text{sizeof(int)} \times 2 \\
+&amp;= 0x0019FE68 + 0x10 + 0x8 \\
+&amp;= 0x0019FE80
+\end{aligned}
+\]
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">#include &lt;stdio.h>
+
+int main()
+{
+    int ary[3][4] = {
+        {1, 2, 3, 4},
+        {5, 6, 7, 8},
+        {9, 10, 11, 12}
+    };
+
+    int n = 1, m = 2;
+
+    printf("%p\r\n", &amp;ary[1][2]);
+    // 答:&amp;ary[1][2] = (int)ary + sizeof(int[4]) * 1 + sizeof(int) * 2
+	//				 = 0x0019FE68 + 10(16) + 0x8 = 0x0019FE80
+
+	printf("%p\r\n", &amp;ary[2][3]);
+    // 答:&amp;ary[2][3] = (int)ary + sizeof(int[4]) * 2 + sizeof(int) * 3
+	//				 = 0x0019FE68 + 20(32) + 0xC(12) = 0x0019FE94
+
+    printf("%p\r\n", &amp;ary[n][m]);
+    // 答:&amp;ary[1][2] = (int)ary + sizeof(int[4]) * 1 + sizeof(int) * 2
+	//				 = 0x0019FE68 + 10(16) + 0x8 = 0x0019FE80
+
+    return 0;
+} 
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="三维数组的内存模型"><a id="三维数组的内存模型" class="anchor" aria-hidden="true" href="#三维数组的内存模型"><span class="octicon octicon-link"></span></a>三维数组的内存模型</h2>
+<p>二维数组可以理解为“行和列”，三维数组可以继续理解为“层、行、列”。</p>
+<p>例如：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">int ary[2][3][4];
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>它可以理解为：</p>
+<ul>
+<li>一共有 2 层</li>
+<li>每层有 3 行</li>
+<li>每行有 4 列</li>
+<li>每个元素是 <code>int</code></li>
+</ul>
+<p>虽然逻辑上是三维结构，但内存仍然是一维连续空间。C 语言依然按行优先顺序存放：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">ary[0][0][0], ary[0][0][1], ..., ary[0][0][3],
+ary[0][1][0], ary[0][1][1], ..., ary[0][2][3],
+ary[1][0][0], ary[1][0][1], ..., ary[1][2][3]
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h2 id="三维数组寻址公式"><a id="三维数组寻址公式" class="anchor" aria-hidden="true" href="#三维数组寻址公式"><span class="octicon octicon-link"></span></a>三维数组寻址公式</h2>
+<p>假设存在一个三维数组：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">type ary[A][B][C];
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>其中：</p>
+<ul>
+<li><code>A</code> 表示层数</li>
+<li><code>B</code> 表示每层的行数</li>
+<li><code>C</code> 表示每行的列数</li>
+<li><code>x</code> 表示层下标</li>
+<li><code>y</code> 表示行下标</li>
+<li><code>z</code> 表示列下标</li>
+</ul>
+<p>访问 <code>ary[x][y][z]</code> 时，需要先跳过 <code>x</code> 个完整的二维平面，再跳过当前平面中的 <code>y</code> 行，最后跳到第 <code>z</code> 个元素。</p>
+<p>一个完整二维平面的大小是：</p>
+\[\begin{aligned}
+\text{sizeof(type[B][C])}
+&amp;= \text{sizeof(type)} \times B \times C
+\end{aligned}
+\]
+<p>一行的大小是：</p>
+\[\begin{aligned}
+\text{sizeof(type[C])}
+&amp;= \text{sizeof(type)} \times C
+\end{aligned}
+\]
+<p>因此三维数组元素地址公式是：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[x][y][z]
+&amp;= \text{(int)ary} + \text{sizeof(type[B][C])} \times x \\
+&amp;\quad + \text{sizeof(type[C])} \times y + \text{sizeof(type)} \times z
+\end{aligned}
+\]
+<p>继续展开：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[x][y][z]
+&amp;= \text{(int)ary} + \text{sizeof(type)} \times B \times C \times x \\
+&amp;\quad + \text{sizeof(type)} \times C \times y + \text{sizeof(type)} \times z \\
+&amp;= \text{(int)ary} + \text{sizeof(type)} \times (B \times C \times x + C \times y + z)
+\end{aligned}
+\]
+<p>三维数组的线性下标就是：</p>
+\[\begin{aligned}
+\text{linear index}
+&amp;= B \times C \times x + C \times y + z
+\end{aligned}
+\]
+<h2 id="三维数组寻址案例"><a id="三维数组寻址案例" class="anchor" aria-hidden="true" href="#三维数组寻址案例"><span class="octicon octicon-link"></span></a>三维数组寻址案例</h2>
+<p>假设有如下数组：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">int ary[2][3][4];
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>数组首地址假设为：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">ary = 0x0019FE00
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>现在计算 <code>&amp;ary[1][2][3]</code>。</p>
+<p>因为 <code>int</code> 占 4 字节，<code>B = 3</code>，<code>C = 4</code>，所以：</p>
+\[\begin{aligned}
+\text{linear index}
+&amp;= B \times C \times x + C \times y + z \\
+&amp;= 3 \times 4 \times 1 + 4 \times 2 + 3 \\
+&amp;= 12 + 8 + 3 \\
+&amp;= 23
+\end{aligned}
+\]
+<p>因此地址为：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[1][2][3]
+&amp;= \text{(int)ary} + \text{sizeof(int)} \times 23 \\
+&amp;= 0x0019FE00 + 4 \times 23 \\
+&amp;= 0x0019FE00 + 92 \\
+&amp;= 0x0019FE00 + 0x5C \\
+&amp;= 0x0019FE5C
+\end{aligned}
+\]
+<p>如果按分层偏移理解，也可以写成：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[1][2][3]
+&amp;= \text{(int)ary} + \text{sizeof(int[3][4])} \times 1 \\
+&amp;\quad + \text{sizeof(int[4])} \times 2 + \text{sizeof(int)} \times 3 \\
+&amp;= 0x0019FE00 + 48 \times 1 + 16 \times 2 + 4 \times 3 \\
+&amp;= 0x0019FE00 + 48 + 32 + 12 \\
+&amp;= 0x0019FE5C
+\end{aligned}
+\]
+<p>这两个计算过程本质相同，只是一个直接使用线性下标，一个按“层、行、列”逐层拆开。</p>
+<h2 id="任意多维数组通用公式"><a id="任意多维数组通用公式" class="anchor" aria-hidden="true" href="#任意多维数组通用公式"><span class="octicon octicon-link"></span></a>任意多维数组通用公式</h2>
+<p>多维数组的本质都是一样的：越靠左的下标，影响的范围越大；越靠右的下标，影响的范围越小。</p>
+<p>假设存在一个 \(k\) 维数组：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">type ary[D1][D2][D3]...[Dk];
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>访问元素：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">ary[i1][i2][i3]...[ik]
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>它的线性下标可以总结为：</p>
+\[\begin{aligned}
+\text{linear index}
+&amp;= i_1 \times D_2 \times D_3 \times \cdots \times D_k \\
+&amp;\quad + i_2 \times D_3 \times D_4 \times \cdots \times D_k \\
+&amp;\quad + i_3 \times D_4 \times D_5 \times \cdots \times D_k \\
+&amp;\quad + \cdots \\
+&amp;\quad + i_{k-1} \times D_k + i_k
+\end{aligned}
+\]
+<p>因此任意多维数组的地址公式可以总结为：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[i_1][i_2]\cdots[i_k]
+&amp;= \text{(int)ary} + \text{sizeof(type)} \times \text{linear index}
+\end{aligned}
+\]
+<p>换句话说，多维数组寻址分两步：</p>
+<ol>
+<li>先把多维下标压平成一维下标。</li>
+<li>再用首地址加上 <code>sizeof(type) * linear index</code>。</li>
+</ol>
+<h2 id="从反汇编角度理解"><a id="从反汇编角度理解" class="anchor" aria-hidden="true" href="#从反汇编角度理解"><span class="octicon octicon-link"></span></a>从反汇编角度理解</h2>
+<p>在反汇编中，访问多维数组时经常会看到类似“乘法加偏移”的地址计算。</p>
+<p>例如二维数组：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">ary[x][y]
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>编译器需要计算：</p>
+\[\begin{aligned}
+\text{address}
+&amp;= \text{base} + \text{sizeof(type)} \times (M \times x + y)
+\end{aligned}
+\]
+<p>如果 <code>type</code> 是 <code>int</code>，<code>M = 4</code>，那么就是：</p>
+\[\begin{aligned}
+\text{address}
+&amp;= \text{base} + 4 \times (4 \times x + y) \\
+&amp;= \text{base} + 16 \times x + 4 \times y
+\end{aligned}
+\]
+<p>三维数组也是同理：</p>
+\[\begin{aligned}
+\text{address}
+&amp;= \text{base} + \text{sizeof(type)} \times (B \times C \times x + C \times y + z)
+\end{aligned}
+\]
+<p>所以在低层代码里，多维数组不会真的表现成“多维结构”，而是表现成一组线性地址计算。</p>
+<h2 id="常见误区"><a id="常见误区" class="anchor" aria-hidden="true" href="#常见误区"><span class="octicon octicon-link"></span></a>常见误区</h2>
+<h3 id="数组名不是普通指针变量"><a id="数组名不是普通指针变量" class="anchor" aria-hidden="true" href="#数组名不是普通指针变量"><span class="octicon octicon-link"></span></a>数组名不是普通指针变量</h3>
+<p>数组名在很多表达式里会退化为指向首元素的指针，但数组名本身不是一个可以随意修改的指针变量。</p>
+<p>下面这种写法是错误的：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">ary = ary + 1;
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>数组名表示的是一段固定存储区域，不能像普通指针变量一样重新赋值。</p>
+<h3 id="多维数组形参需要知道后续维度"><a id="多维数组形参需要知道后续维度" class="anchor" aria-hidden="true" href="#多维数组形参需要知道后续维度"><span class="octicon octicon-link"></span></a>多维数组形参需要知道后续维度</h3>
+<p>如果函数接收二维数组，列数通常必须明确：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">void print_array(int ary[][4], int rows) {
+    for (int i = 0; i &lt; rows; i++) {
+        for (int j = 0; j &lt; 4; j++) {
+            printf("%d ", ary[i][j]);
+        }
+        printf("\n");
+    }
+}
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>原因是编译器需要知道每一行有多大，才能计算 <code>M * x + y</code>。</p>
+<p>三维数组也是同理：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">void print_3d(int ary[][3][4], int layers) {
+    for (int x = 0; x &lt; layers; x++) {
+        for (int y = 0; y &lt; 3; y++) {
+            for (int z = 0; z &lt; 4; z++) {
+                printf("%d ", ary[x][y][z]);
+            }
+        }
+    }
+}
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里可以省略第一维，但后面的 <code>[3][4]</code> 不能省略。因为编译器必须知道：</p>
+\[\begin{aligned}
+\text{linear index}
+&amp;= 3 \times 4 \times x + 4 \times y + z
+\end{aligned}
+\]
+<p>如果不知道后续维度大小，就无法从多维下标推导出正确的线性偏移。</p>
+<h3 id="越界下标仍然能算出地址，但行为未定义"><a id="越界下标仍然能算出地址，但行为未定义" class="anchor" aria-hidden="true" href="#越界下标仍然能算出地址，但行为未定义"><span class="octicon octicon-link"></span></a>越界下标仍然能算出地址，但行为未定义</h3>
+<p>例如：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">ary[3][0]
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>对于 <code>int ary[3][4]</code> 来说，合法行下标是 <code>0</code> 到 <code>2</code>。虽然公式仍然可以算出一个地址，但这个地址已经不属于数组的合法访问范围。</p>
+<p>C 语言不会自动做边界检查，越界访问属于未定义行为，可能读到错误数据，也可能导致程序崩溃。</p>
+<h2 id="原理总结"><a id="原理总结" class="anchor" aria-hidden="true" href="#原理总结"><span class="octicon octicon-link"></span></a>原理总结</h2>
+<p>数组寻址的核心是：数组元素在内存中连续存放，下标访问会被转换成基于首地址的偏移计算。</p>
+<p>一维数组：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[n]
+&amp;= \text{(int)ary} + \text{sizeof(type)} \times n
+\end{aligned}
+\]
+<p>二维数组：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[x][y]
+&amp;= \text{(int)ary} + \text{sizeof(type)} \times (M \times x + y)
+\end{aligned}
+\]
+<p>三维数组：</p>
+\[\begin{aligned}
+\text{\&amp;ary}[x][y][z]
+&amp;= \text{(int)ary} + \text{sizeof(type)} \times (B \times C \times x + C \times y + z)
+\end{aligned}
+\]
+<p>任意多维数组：</p>
+\[\begin{aligned}
+\text{address}
+&amp;= \text{base address} + \text{sizeof(type)} \times \text{linear index}
+\end{aligned}
+\]
+<p>多维数组的关键不是“维度有多少”，而是如何把多维下标压平成一个线性下标。只要能算出 <code>linear index</code>，最终地址就能通过首地址加偏移得到。</p>
+</article><div class="post-copyright post-disclaimer"><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-info fa-fw"></i>免责声明: </span><span class="post-copyright-info">本站内容仅用于知识分享与安全研究交流。任何人不得将本文内容用于违法违规用途；由此产生的任何后果均与作者本人无关。请在合法授权环境中学习、验证与使用相关知识。</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C%E8%AF%AD%E8%A8%80/">C语言</a></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/08/07/mweb-17860876384530/" title="函数调用栈分析(32 位 x86/MSVC)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">函数调用栈分析(32 位 x86/MSVC)</div></div><div class="info-2"><div class="info-item-1"> 基础概念 函数调用约定（Calling Convention）是调用方和被调用方之间的一组规则。它规定了函数调用时几个关键问题：  参数按照什么顺序传递 参数通过栈还是寄存器传递 返回值放在哪里 函数调用结束后由谁恢复栈  常见的 32 位调用约定主要有 __cdecl、__stdcall 和 __fastcall。    调用约定 参数传递方向 传输媒介 返回值位置 栈平衡     __cdecl 从右往左 栈 EAX 调用方   __stdcall 从右往左 栈 EAX 被调用方   __fastcall 从右往左 ECX/EDX + 栈 EAX 被调用方    从逆向角度看，调用约定最重要的不是名字，而是它会直接影响反汇编中的参数位置和栈恢复指令。  调用约定 __cdecl __cdecl 是 C/C++ 中常见的默认调用约定。它的特点是参数从右到左依次压栈，函数返回值通常放在 EAX 中，调用结束后由调用方负责恢复栈。 #include &lt;stdio.h&gt;  int __cdecl fun(int x, int y, int z) &#123;     r...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/camer.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ decoding="async" loading="lazy"></div><div class="author-info-name">Camer</div><div class="author-info-description">专注研究网络安全、逆向分析、应急响应、代码编程、二进制研究</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">基本概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">一维数组的内存模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E7%BB%B4%E6%95%B0%E7%BB%84%E5%AF%BB%E5%9D%80%E5%85%AC%E5%BC%8F"><span class="toc-number">3.</span> <span class="toc-text">一维数组寻址公式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E6%A0%87%E8%AE%BF%E9%97%AE%E7%9A%84%E6%9C%AC%E8%B4%A8"><span class="toc-number">4.</span> <span class="toc-text">下标访问的本质</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E7%BB%B4%E6%95%B0%E7%BB%84%E5%AF%BB%E5%9D%80%E6%A1%88%E4%BE%8B"><span class="toc-number">5.</span> <span class="toc-text">一维数组寻址案例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="toc-number">6.</span> <span class="toc-text">二维数组的内存模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E5%AF%BB%E5%9D%80%E5%85%AC%E5%BC%8F"><span class="toc-number">7.</span> <span class="toc-text">二维数组寻址公式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E5%AF%BB%E5%9D%80%E6%A1%88%E4%BE%8B"><span class="toc-number">8.</span> <span class="toc-text">二维数组寻址案例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="toc-number">9.</span> <span class="toc-text">三维数组的内存模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E7%BB%B4%E6%95%B0%E7%BB%84%E5%AF%BB%E5%9D%80%E5%85%AC%E5%BC%8F"><span class="toc-number">10.</span> <span class="toc-text">三维数组寻址公式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E7%BB%B4%E6%95%B0%E7%BB%84%E5%AF%BB%E5%9D%80%E6%A1%88%E4%BE%8B"><span class="toc-number">11.</span> <span class="toc-text">三维数组寻址案例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E6%84%8F%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84%E9%80%9A%E7%94%A8%E5%85%AC%E5%BC%8F"><span class="toc-number">12.</span> <span class="toc-text">任意多维数组通用公式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E5%8F%8D%E6%B1%87%E7%BC%96%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3"><span class="toc-number">13.</span> <span class="toc-text">从反汇编角度理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E8%AF%AF%E5%8C%BA"><span class="toc-number">14.</span> <span class="toc-text">常见误区</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%90%8D%E4%B8%8D%E6%98%AF%E6%99%AE%E9%80%9A%E6%8C%87%E9%92%88%E5%8F%98%E9%87%8F"><span class="toc-number">14.1.</span> <span class="toc-text">数组名不是普通指针变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84%E5%BD%A2%E5%8F%82%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E5%90%8E%E7%BB%AD%E7%BB%B4%E5%BA%A6"><span class="toc-number">14.2.</span> <span class="toc-text">多维数组形参需要知道后续维度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B6%8A%E7%95%8C%E4%B8%8B%E6%A0%87%E4%BB%8D%E7%84%B6%E8%83%BD%E7%AE%97%E5%87%BA%E5%9C%B0%E5%9D%80%EF%BC%8C%E4%BD%86%E8%A1%8C%E4%B8%BA%E6%9C%AA%E5%AE%9A%E4%B9%89"><span class="toc-number">14.3.</span> <span class="toc-text">越界下标仍然能算出地址，但行为未定义</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93"><span class="toc-number">15.</span> <span class="toc-text">原理总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/08/mweb-17861622986083/" title="C 语言多维数组寻址原理">C 语言多维数组寻址原理</a><time datetime="2026-08-07T16:00:00.000Z" title="发表于 2026-08-08 00:00:00">2026-08-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/07/mweb-17860876384530/" title="函数调用栈分析(32 位 x86/MSVC)">函数调用栈分析(32 位 x86/MSVC)</a><time datetime="2026-08-06T16:00:00.000Z" title="发表于 2026-08-07 00:00:00">2026-08-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/06/mweb-17860219086253/" title="vLLM 本地推理服务部署">vLLM 本地推理服务部署</a><time datetime="2026-08-05T16:00:00.000Z" title="发表于 2026-08-06 00:00:00">2026-08-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/05/mweb-17858899234672/" title="模型微调">模型微调</a><time datetime="2026-08-04T16:00:00.000Z" title="发表于 2026-08-05 00:00:00">2026-08-05</time></div></div></div></div></div></div><aside id="cam-right-widgets" class="cam-right-widgets aside-content"><div class="card-widget card-cam-calendar"><div class="item-headline"><i class="far fa-calendar-alt"></i><span>博客文章日历</span></div><div id="cam-calendar-card" class="cam-calendar-widget" data-static="true"><div class="cam-calendar-head"><span>2026 年 08 月</span><span>4 天有更新</span></div><div class="cam-calendar-week"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div><div class="cam-calendar-grid"><span class="cam-calendar-day is-empty"></span><span class="cam-calendar-day is-empty"></span><span class="cam-calendar-day is-empty"></span><span class="cam-calendar-day is-empty"></span><span class="cam-calendar-day is-empty"></span><span class="cam-calendar-day is-empty"></span><span class="cam-calendar-day" title="2026-08-01" data-count="0">1</span><span class="cam-calendar-day" title="2026-08-02" data-count="0">2</span><span class="cam-calendar-day" title="2026-08-03" data-count="0">3</span><span class="cam-calendar-day" title="2026-08-04" data-count="0">4</span><span class="cam-calendar-day has-posts" title="2026-08-05 发布 1 篇" data-count="1">5</span><span class="cam-calendar-day has-posts" title="2026-08-06 发布 1 篇" data-count="1">6</span><span class="cam-calendar-day has-posts" title="2026-08-07 发布 1 篇" data-count="1">7</span><span class="cam-calendar-day has-posts" title="2026-08-08 发布 1 篇" data-count="1">8</span><span class="cam-calendar-day" title="2026-08-09" data-count="0">9</span><span class="cam-calendar-day" title="2026-08-10" data-count="0">10</span><span class="cam-calendar-day" title="2026-08-11" data-count="0">11</span><span class="cam-calendar-day" title="2026-08-12" data-count="0">12</span><span class="cam-calendar-day" title="2026-08-13" data-count="0">13</span><span class="cam-calendar-day" title="2026-08-14" data-count="0">14</span><span class="cam-calendar-day" title="2026-08-15" data-count="0">15</span><span class="cam-calendar-day" title="2026-08-16" data-count="0">16</span><span class="cam-calendar-day" title="2026-08-17" data-count="0">17</span><span class="cam-calendar-day" title="2026-08-18" data-count="0">18</span><span class="cam-calendar-day" title="2026-08-19" data-count="0">19</span><span class="cam-calendar-day" title="2026-08-20" data-count="0">20</span><span class="cam-calendar-day" title="2026-08-21" data-count="0">21</span><span class="cam-calendar-day" title="2026-08-22" data-count="0">22</span><span class="cam-calendar-day" title="2026-08-23" data-count="0">23</span><span class="cam-calendar-day" title="2026-08-24" data-count="0">24</span><span class="cam-calendar-day" title="2026-08-25" data-count="0">25</span><span class="cam-calendar-day" title="2026-08-26" data-count="0">26</span><span class="cam-calendar-day" title="2026-08-27" data-count="0">27</span><span class="cam-calendar-day" title="2026-08-28" data-count="0">28</span><span class="cam-calendar-day" title="2026-08-29" data-count="0">29</span><span class="cam-calendar-day" title="2026-08-30" data-count="0">30</span><span class="cam-calendar-day" title="2026-08-31" data-count="0">31</span></div></div></div><div class="card-widget card-cam-hitokoto"><div class="item-headline"><i class="fas fa-quote-left"></i><span>每日一言</span></div><div class="cam-hitokoto-widget"><p id="cam-hitokoto-text">保持好奇，保持清醒。</p><div id="cam-hitokoto-from" class="cam-hitokoto-from">本地备用</div></div></div></aside></main><footer id="footer" style="background-image: url(/img/safe.webp?v=1);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2020 - 2026 By Camer</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.6.1"></script><script src="/js/main.js?v=5.6.1"></script><div class="js-pjax"><script>(() => {
+  const changeScriptToMath = article => {
+    article.querySelectorAll('script[type^="math/tex"]').forEach(el => {
+      const display = /mode=display/.test(el.type)
+      const node = document.createElement(display ? 'div' : 'span')
+      node.textContent = display
+        ? `$$${el.textContent}$$`
+        : `$${el.textContent}$`
+      el.parentNode.replaceChild(node, el)
+    })
+  }
+
+  const loadMathjax = () => {
+    const article = document.getElementById('article-container')
+    if (!article || article.querySelector('.hbe-container')) return
+    changeScriptToMath(article)
+
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem',
+            'ui/lazy'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          lazyMargin: '200px',
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.typesetClear()
+      MathJax.typesetPromise([ article ])
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.innerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+
+    setTimeout(() => URL.revokeObjectURL(url), 5000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    // Clean up previous event listeners and pending frames
+    if (wrap.__mermaidAbortController) {
+      wrap.__mermaidAbortController.abort()
+      if (wrap.__mermaidRafId) cancelAnimationFrame(wrap.__mermaidRafId)
+    }
+    const ac = new AbortController()
+    wrap.__mermaidAbortController = ac
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+    // Disable default gestures to prevent scroll chaining and pinch-zoom penetration in Chrome
+    svg.style.touchAction = 'none'
+
+    // Cache BoundingClientRect, throttled on scroll to reduce reflow
+    let cachedRect = svg.getBoundingClientRect()
+    let rectDirty = false
+    const markRectDirty = () => { rectDirty = true }
+    window.addEventListener('resize', markRectDirty, { signal: ac.signal })
+    window.addEventListener('scroll', markRectDirty, { signal: ac.signal, capture: true })
+    const getRect = () => {
+      if (rectDirty) {
+        cachedRect = svg.getBoundingClientRect()
+        rectDirty = false
+      }
+      return cachedRect
+    }
+
+    // Precompute clamp bounds from initial viewBox
+    const minW = initVb[2] * 0.1
+    const maxW = initVb[2] * 10
+    const minH = initVb[3] * 0.1
+    const maxH = initVb[3] * 10
+    const clampVb = vb => {
+      const out = vb.slice()
+      out[2] = clamp(out[2], minW, maxW)
+      out[3] = clamp(out[3], minH, maxH)
+      return out
+    }
+
+    // Throttle DOM updates using requestAnimationFrame
+    let pendingVb = null
+    let rafId = null
+    const applyVb = () => {
+      if (pendingVb) {
+        wrap.__mermaidCurViewBox = pendingVb
+        setSvgViewBox(svg, pendingVb)
+        pendingVb = null
+      }
+      rafId = null
+      wrap.__mermaidRafId = null
+    }
+    const setCurVb = vb => {
+      pendingVb = clampVb(vb)
+      if (!rafId) {
+        rafId = requestAnimationFrame(applyVb)
+        wrap.__mermaidRafId = rafId
+      }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      lastPointerX: 0,
+      lastPointerY: 0
+    }
+
+    const onPointerDown = e => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      const curVb = wrap.__mermaidCurViewBox
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+      if (state.pointers.size === 1) {
+        state.startVb = curVb.slice()
+        state.lastPointerX = e.clientX
+        state.lastPointerY = e.clientY
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = curVb.slice()
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+      const curVb = wrap.__mermaidCurViewBox
+      const rect = getRect()
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = state.pointers.values().next().value
+        const dxClient = p.x - state.lastPointerX
+        const dyClient = p.y - state.lastPointerY
+        state.lastPointerX = p.x
+        state.lastPointerY = p.y
+        const dx = dxClient * (curVb[2] / rect.width)
+        const dy = dyClient * (curVb[3] / rect.height)
+        setCurVb([curVb[0] - dx, curVb[1] - dy, curVb[2], curVb[3]])
+        return
+      }
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const px = curVb[0] + (cx - rect.left) * (curVb[2] / rect.width)
+        const py = curVb[1] + (cy - rect.top) * (curVb[3] / rect.height)
+        setCurVb(zoomAtPoint(state.startVb, factor, px, py))
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      // Release PointerCapture to avoid event capture anomalies
+      if (svg.hasPointerCapture && svg.hasPointerCapture(e.pointerId)) {
+        svg.releasePointerCapture(e.pointerId)
+      }
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+      } else if (state.pointers.size === 1) {
+        const p = state.pointers.values().next().value
+        state.lastPointerX = p.x
+        state.lastPointerY = p.y
+      }
+    }
+
+    const onWheel = e => {
+      // Prevent event bubbling from triggering external scroll
+      e.preventDefault()
+      e.stopPropagation()
+      // Normalize deltaY across deltaMode (Chrome uses pixels, Safari uses lines)
+      let delta = e.deltaY
+      if (e.deltaMode === 1) delta *= 16
+      else if (e.deltaMode === 2) delta *= 400
+
+      // Continuous zoom factor: smoother than fixed 1.1/0.9 steps
+      const zoomFactor = Math.pow(1.001, delta)
+
+      const curVb = wrap.__mermaidCurViewBox
+      const rect = getRect()
+      const px = curVb[0] + (e.clientX - rect.left) * (curVb[2] / rect.width)
+      const py = curVb[1] + (e.clientY - rect.top) * (curVb[3] / rect.height)
+      setCurVb(zoomAtPoint(curVb, zoomFactor, px, py))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (init) setCurVb(init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown, { signal: ac.signal })
+    svg.addEventListener('pointermove', onPointerMove, { signal: ac.signal })
+    svg.addEventListener('pointerup', onPointerUpOrCancel, { signal: ac.signal })
+    svg.addEventListener('pointercancel', onPointerUpOrCancel, { signal: ac.signal })
+    svg.addEventListener('wheel', onWheel, { passive: false, signal: ac.signal })
+    svg.addEventListener('dblclick', onDblClick, { signal: ac.signal })
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      // Clean up event listeners before removing old SVG
+      if (item.__mermaidAbortController) {
+        item.__mermaidAbortController.abort()
+      }
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      let config = {}
+      try {
+        config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      } catch (e) {
+        console.warn('[mermaid] failed to parse dataset.config:', e)
+      }
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (true) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (true) attachMermaidViewerButton(item)
+      }
+
+      const handleError = err => {
+        console.error(`[mermaid] render failed for block #${index}:`, err)
+        const errorEl = document.createElement('div')
+        errorEl.className = 'mermaid-error'
+        errorEl.textContent = `Mermaid render error: ${err.message || err}`
+        mermaidSrc.insertAdjacentElement('afterend', errorEl)
+      }
+
+      try {
+        const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+        // mermaid v9 and v10 compatibility
+        if (typeof renderFn === 'string') {
+          renderMermaid(renderFn)
+        } else {
+          renderFn.then(({ svg }) => renderMermaid(svg)).catch(handleError)
+        }
+      } catch (err) {
+        handleError(err)
+      }
+    })
+  }
+
+  const codeToMermaid = $article => {
+    const codeMermaidEle = $article.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    const $article = document.getElementById('article-container')
+    if (!$article) return
+
+    if (true) codeToMermaid($article)
+    const $mermaid = $article.querySelectorAll('.mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.16.0/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-clike.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-c.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-cpp.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-nasm.min.js" defer="defer"></script><script>document.addEventListener("DOMContentLoaded",function(){if(window.Prism&&Prism.languages.nasm&&!Prism.languages.asm){Prism.languages.asm=Prism.languages.nasm;Prism.languages.x86asm=Prism.languages.nasm;}},{once:true,capture:true});</script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-bash.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-python.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-json.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-ini.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.js" defer="defer"></script><script src="/js/profile-panel.js?v=13"></script><script src="/js/sidebar-widgets.js?v=7"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.6.1"></script></div></div></body></html>
