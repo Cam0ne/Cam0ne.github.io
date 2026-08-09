@@ -1,0 +1,1090 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>JCC 条件跳转指令入门 | Camer's blog</title><meta name="author" content="Camer"><meta name="copyright" content="Camer"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="基本概述 看反汇编代码时，经常会遇到 je、jne、jg、jl 这一类指令。它们都属于 JCC 指令，也就是条件跳转指令。 JCC 的全称可以理解为： Jump if Condition is met  意思是：如果某个条件成立，就跳转到指定地址；如果条件不成立，就继续往下执行。 在逆向分析里，JCC 基本可以对应到高级语言里的 if、else、循环判断、错误分支判断。 1. JCC 指令是什么">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JCC 条件跳转指令入门">
+<meta property="og:url" content="https://cam0ne.github.io/2026/08/09/mweb-17862731365786/index.html">
+<meta property="og:site_name" content="Camer&#39;s blog">
+<meta property="og:description" content="基本概述 看反汇编代码时，经常会遇到 je、jne、jg、jl 这一类指令。它们都属于 JCC 指令，也就是条件跳转指令。 JCC 的全称可以理解为： Jump if Condition is met  意思是：如果某个条件成立，就跳转到指定地址；如果条件不成立，就继续往下执行。 在逆向分析里，JCC 基本可以对应到高级语言里的 if、else、循环判断、错误分支判断。 1. JCC 指令是什么">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cam0ne.github.io/img/camer.jpg">
+<meta property="article:published_time" content="2026-08-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-09T11:15:46.301Z">
+<meta property="article:author" content="Camer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cam0ne.github.io/img/camer.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "JCC 条件跳转指令入门",
+  "url": "https://cam0ne.github.io/2026/08/09/mweb-17862731365786/",
+  "image": "https://cam0ne.github.io/img/camer.jpg",
+  "datePublished": "2026-08-08T16:00:00.000Z",
+  "dateModified": "2026-08-09T11:15:46.301Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Camer",
+      "url": "https://Cam0ne.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/husky.png?v=3"><link rel="canonical" href="https://cam0ne.github.io/2026/08/09/mweb-17862731365786/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'JCC 条件跳转指令入门',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/profile-panel.css?v=10"><link rel="stylesheet" href="/css/site-dark.css?v=35"><meta name="generator" content="Hexo 7.3.0"><link rel="preload" as="image" href="/img/safe2.webp?v=1" fetchpriority="high"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/safe3.webp?v=1);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/camer.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ decoding="async" loading="lazy"></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-id-card"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/safe2.webp?v=1);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/husky.png?v=3" alt="Logo" decoding="async"><span class="site-name">Camer's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">JCC 条件跳转指令入门</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-id-card"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">JCC 条件跳转指令入门</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-08-08T16:00:00.000Z" title="发表于 2026-08-09 00:00:00">2026-08-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-09T11:15:46.301Z" title="更新于 2026-08-09 19:15:46">2026-08-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AI%E5%BC%80%E5%8F%91/">AI开发</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout cam-three-column" id="content-inner"><div id="post"><article class="container post-content" id="article-container">
+<h2 id="基本概述"><a id="基本概述" class="anchor" aria-hidden="true" href="#基本概述"><span class="octicon octicon-link"></span></a>基本概述</h2>
+<p>看反汇编代码时，经常会遇到 <code>je</code>、<code>jne</code>、<code>jg</code>、<code>jl</code> 这一类指令。它们都属于 JCC 指令，也就是条件跳转指令。</p>
+<p>JCC 的全称可以理解为：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">Jump if Condition is met
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>意思是：如果某个条件成立，就跳转到指定地址；如果条件不成立，就继续往下执行。</p>
+<p>在逆向分析里，JCC 基本可以对应到高级语言里的 <code>if</code>、<code>else</code>、循环判断、错误分支判断。</p>
+<h2 id="1-jcc指令是什么"><a id="1-jcc指令是什么" class="anchor" aria-hidden="true" href="#1-jcc指令是什么"><span class="octicon octicon-link"></span></a>1. JCC 指令是什么</h2>
+<p>JCC 由两部分组成：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">J + CC
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>其中：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">J  = Jump，跳转
+CC = Condition Code，条件码
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>例如：</p>
+<pre class="line-numbers language-asm" data-language="asm"><code class="language-asm">cmp eax, 1
+je  success
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>可以读成：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">比较 eax 和 1
+如果相等，就跳转到 success
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>这里的 <code>je</code> 就是 <code>Jump if Equal</code>，相等则跳转。</p>
+<h2 id="2-jcc判断的不是变量，而是标志位"><a id="2-jcc判断的不是变量，而是标志位" class="anchor" aria-hidden="true" href="#2-jcc判断的不是变量，而是标志位"><span class="octicon octicon-link"></span></a>2. JCC 判断的不是变量，而是标志位</h2>
+<p>JCC 指令本身不会直接比较两个变量。它判断的是 CPU 标志寄存器里的标志位。</p>
+<p>常见标志位有：</p>
+<table>
+<thead>
+<tr>
+<th>标志位</th>
+<th>名称</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ZF</code></td>
+<td>Zero Flag</td>
+<td>结果是否为 0</td>
+</tr>
+<tr>
+<td><code>CF</code></td>
+<td>Carry Flag</td>
+<td>无符号运算是否产生借位或进位</td>
+</tr>
+<tr>
+<td><code>SF</code></td>
+<td>Sign Flag</td>
+<td>结果是否为负</td>
+</tr>
+<tr>
+<td><code>OF</code></td>
+<td>Overflow Flag</td>
+<td>有符号运算是否溢出</td>
+</tr>
+<tr>
+<td><code>PF</code></td>
+<td>Parity Flag</td>
+<td>结果低 8 位中 1 的个数是否为偶数</td>
+</tr>
+</tbody>
+</table>
+<p>通常是前面的 <code>cmp</code>、<code>test</code>、<code>sub</code> 等指令先影响标志位，后面的 JCC 再根据标志位决定是否跳转。</p>
+<p>最常见的组合是：</p>
+<pre class="line-numbers language-asm" data-language="asm"><code class="language-asm">cmp eax, ebx
+jne loc_fail
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>这段可以理解为：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">如果 eax != ebx，则跳转到 loc_fail
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="3-cmp和-jcc的阅读方式"><a id="3-cmp和-jcc的阅读方式" class="anchor" aria-hidden="true" href="#3-cmp和-jcc的阅读方式"><span class="octicon octicon-link"></span></a>3. <code>cmp</code> 和 JCC 的阅读方式</h2>
+<p><code>cmp a, b</code> 本质上会做一次减法：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">a - b
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>但它不会保存结果，只会更新标志位。</p>
+<p>所以：</p>
+<pre class="line-numbers language-asm" data-language="asm"><code class="language-asm">cmp eax, 10
+je  equal
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>等价理解为：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">if (eax == 10) {
+    goto equal;
+}
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>再看一个：</p>
+<pre class="line-numbers language-asm" data-language="asm"><code class="language-asm">cmp eax, 10
+jg  greater
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>如果这里按有符号数理解，就是：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">if ((int)eax > 10) {
+    goto greater;
+}
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>重点是：同样是 <code>cmp eax, 10</code>，后面跟不同的 JCC，含义就不同。</p>
+<h2 id="4最常用的相等判断"><a id="4最常用的相等判断" class="anchor" aria-hidden="true" href="#4最常用的相等判断"><span class="octicon octicon-link"></span></a>4. 最常用的相等判断</h2>
+<p>相等和不相等判断主要看 <code>ZF</code>。</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>条件</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>JE</code> / <code>JZ</code></td>
+<td><code>ZF = 1</code></td>
+<td>相等则跳转 / 结果为 0 则跳转</td>
+</tr>
+<tr>
+<td><code>JNE</code> / <code>JNZ</code></td>
+<td><code>ZF = 0</code></td>
+<td>不相等则跳转 / 结果不为 0 则跳转</td>
+</tr>
+</tbody>
+</table>
+<p><code>JE</code> 和 <code>JZ</code> 是同义指令，只是阅读角度不同：</p>
+<pre class="line-numbers language-asm" data-language="asm"><code class="language-asm">cmp eax, ebx
+je  same
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>更适合读成：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">如果 eax == ebx，跳转
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>而：</p>
+<pre class="line-numbers language-asm" data-language="asm"><code class="language-asm">test eax, eax
+jz   is_zero
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>更适合读成：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">如果 eax == 0，跳转
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>因为 <code>test eax, eax</code> 常用于判断一个值是否为 0。</p>
+<h2 id="5无符号数比较：看-a和-b"><a id="5无符号数比较：看-a和-b" class="anchor" aria-hidden="true" href="#5无符号数比较：看-a和-b"><span class="octicon octicon-link"></span></a>5. 无符号数比较：看 A 和 B</h2>
+<p>无符号数比较时，常见指令里会出现 <code>A</code> 和 <code>B</code>：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">A = Above，高于
+B = Below，低于
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>它们用于无符号数比较。</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>条件</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>JA</code> / <code>JNBE</code></td>
+<td><code>CF = 0 且 ZF = 0</code></td>
+<td>无符号大于</td>
+</tr>
+<tr>
+<td><code>JAE</code> / <code>JNB</code></td>
+<td><code>CF = 0</code></td>
+<td>无符号大于等于</td>
+</tr>
+<tr>
+<td><code>JB</code> / <code>JNAE</code></td>
+<td><code>CF = 1</code></td>
+<td>无符号小于</td>
+</tr>
+<tr>
+<td><code>JBE</code> / <code>JNA</code></td>
+<td><code>CF = 1 或 ZF = 1</code></td>
+<td>无符号小于等于</td>
+</tr>
+</tbody>
+</table>
+<p>例如：</p>
+<pre class="line-numbers language-asm" data-language="asm"><code class="language-asm">cmp eax, 100
+ja  above_100
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>可以读成：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">if ((unsigned int)eax > 100) {
+    goto above_100;
+}
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>无符号比较常见于长度、索引、内存大小、文件大小等场景。</p>
+<h2 id="6有符号数比较：看-g和-l"><a id="6有符号数比较：看-g和-l" class="anchor" aria-hidden="true" href="#6有符号数比较：看-g和-l"><span class="octicon octicon-link"></span></a>6. 有符号数比较：看 G 和 L</h2>
+<p>有符号数比较时，常见指令里会出现 <code>G</code> 和 <code>L</code>：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">G = Greater，大于
+L = Less，小于
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>它们用于有符号数比较。</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>条件</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>JG</code> / <code>JNLE</code></td>
+<td><code>ZF = 0 且 SF = OF</code></td>
+<td>有符号大于</td>
+</tr>
+<tr>
+<td><code>JGE</code> / <code>JNL</code></td>
+<td><code>SF = OF</code></td>
+<td>有符号大于等于</td>
+</tr>
+<tr>
+<td><code>JL</code> / <code>JNGE</code></td>
+<td><code>SF != OF</code></td>
+<td>有符号小于</td>
+</tr>
+<tr>
+<td><code>JLE</code> / <code>JNG</code></td>
+<td><code>ZF = 1 或 SF != OF</code></td>
+<td>有符号小于等于</td>
+</tr>
+</tbody>
+</table>
+<p>例如：</p>
+<pre class="line-numbers language-asm" data-language="asm"><code class="language-asm">cmp eax, 0
+jl  negative
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>可以读成：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">if ((int)eax &lt; 0) {
+    goto negative;
+}
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>如果看到 <code>jg</code>、<code>jge</code>、<code>jl</code>、<code>jle</code>，优先按有符号整数比较理解。</p>
+<h2 id="7其他常见跳转"><a id="7其他常见跳转" class="anchor" aria-hidden="true" href="#7其他常见跳转"><span class="octicon octicon-link"></span></a>7. 其他常见跳转</h2>
+<p>除了大小比较，还有一些直接检查标志位的跳转：</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>条件</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>JS</code></td>
+<td><code>SF = 1</code></td>
+<td>结果为负则跳转</td>
+</tr>
+<tr>
+<td><code>JNS</code></td>
+<td><code>SF = 0</code></td>
+<td>结果非负则跳转</td>
+</tr>
+<tr>
+<td><code>JO</code></td>
+<td><code>OF = 1</code></td>
+<td>溢出则跳转</td>
+</tr>
+<tr>
+<td><code>JNO</code></td>
+<td><code>OF = 0</code></td>
+<td>没有溢出则跳转</td>
+</tr>
+<tr>
+<td><code>JP</code> / <code>JPE</code></td>
+<td><code>PF = 1</code></td>
+<td>奇偶校验为偶则跳转</td>
+</tr>
+<tr>
+<td><code>JNP</code> / <code>JPO</code></td>
+<td><code>PF = 0</code></td>
+<td>奇偶校验为奇则跳转</td>
+</tr>
+</tbody>
+</table>
+<p>这些没有 <code>je</code>、<code>jne</code>、<code>jg</code>、<code>jl</code> 常见，但在编译器优化、特殊校验逻辑、底层库代码里也会遇到。</p>
+<h2 id="8逆向时怎么快速判断分支"><a id="8逆向时怎么快速判断分支" class="anchor" aria-hidden="true" href="#8逆向时怎么快速判断分支"><span class="octicon octicon-link"></span></a>8. 逆向时怎么快速判断分支</h2>
+<p>看 JCC 不要只盯着跳转指令本身，应该往上看一两行，找到是谁设置了标志位。</p>
+<p>常见阅读顺序：</p>
+<ol>
+<li>找到 JCC 指令，例如 <code>jne loc_fail</code>。</li>
+<li>往上找最近的 <code>cmp</code> 或 <code>test</code>。</li>
+<li>判断比较对象，例如 <code>cmp eax, 1</code>。</li>
+<li>把 JCC 翻译成高级语言条件。</li>
+<li>看跳转目标是成功分支还是失败分支。</li>
+</ol>
+<p>例如：</p>
+<pre class="line-numbers language-asm" data-language="asm"><code class="language-asm">cmp eax, 1
+jne loc_fail
+mov ecx, 1234h
+jmp loc_end
+
+loc_fail:
+xor ecx, ecx
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以整理成：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">if (eax != 1) {
+    ecx = 0;
+} else {
+    ecx = 0x1234;
+}
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>注意这里 <code>jne loc_fail</code> 跳向的是失败分支，所以不能只看到 <code>jne</code> 就机械理解成“主逻辑是不相等”。要结合跳转目标一起看。</p>
+<h2 id="9-test-reg-reg的常见用法"><a id="9-test-reg-reg的常见用法" class="anchor" aria-hidden="true" href="#9-test-reg-reg的常见用法"><span class="octicon octicon-link"></span></a>9. <code>test reg, reg</code> 的常见用法</h2>
+<p><code>test</code> 指令经常和 <code>jz</code>、<code>jnz</code> 搭配：</p>
+<pre class="line-numbers language-asm" data-language="asm"><code class="language-asm">test eax, eax
+jz   loc_zero
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><code>test eax, eax</code> 会把 <code>eax</code> 和自身做按位与。如果 <code>eax</code> 是 0，结果就是 0，<code>ZF</code> 会被置 1。</p>
+<p>所以它常被用来判断：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">if (eax == 0) {
+    goto loc_zero;
+}
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>另一个常见形式：</p>
+<pre class="line-numbers language-asm" data-language="asm"><code class="language-asm">test eax, eax
+jnz  loc_not_zero
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>等价于：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">if (eax != 0) {
+    goto loc_not_zero;
+}
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>在函数返回值判断里，这种写法非常常见。</p>
+<h2 id="10一张速查表"><a id="10一张速查表" class="anchor" aria-hidden="true" href="#10一张速查表"><span class="octicon octicon-link"></span></a>10. 一张速查表</h2>
+<p>下面这张表可以作为日常读汇编时的完整速查表。重点看两列：一列是它检查哪个标志位，另一列是它适合有符号还是无符号语义。</p>
+<table>
+<thead>
+<tr>
+<th>JCC 指令</th>
+<th>中文含义</th>
+<th>检查标志位</th>
+<th>英文全称</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>JE</code> / <code>JZ</code></td>
+<td>结果为零则跳转，也常用于相等时跳转</td>
+<td><code>ZF = 1</code></td>
+<td>Jump if Equal / Jump if Zero</td>
+</tr>
+<tr>
+<td><code>JNE</code> / <code>JNZ</code></td>
+<td>结果不为零则跳转，也常用于不相等时跳转</td>
+<td><code>ZF = 0</code></td>
+<td>Jump if Not Equal / Jump if Not Zero</td>
+</tr>
+<tr>
+<td><code>JS</code></td>
+<td>结果为负则跳转</td>
+<td><code>SF = 1</code></td>
+<td>Jump if Sign</td>
+</tr>
+<tr>
+<td><code>JNS</code></td>
+<td>结果非负则跳转</td>
+<td><code>SF = 0</code></td>
+<td>Jump if Not Sign</td>
+</tr>
+<tr>
+<td><code>JP</code> / <code>JPE</code></td>
+<td>结果中 1 的个数为偶数则跳转</td>
+<td><code>PF = 1</code></td>
+<td>Jump if Parity / Jump if Parity Even</td>
+</tr>
+<tr>
+<td><code>JNP</code> / <code>JPO</code></td>
+<td>结果中 1 的个数为奇数则跳转</td>
+<td><code>PF = 0</code></td>
+<td>Jump if Not Parity / Jump if Parity Odd</td>
+</tr>
+<tr>
+<td><code>JO</code></td>
+<td>结果溢出则跳转</td>
+<td><code>OF = 1</code></td>
+<td>Jump if Overflow</td>
+</tr>
+<tr>
+<td><code>JNO</code></td>
+<td>结果没有溢出则跳转</td>
+<td><code>OF = 0</code></td>
+<td>Jump if Not Overflow</td>
+</tr>
+<tr>
+<td><code>JB</code> / <code>JNAE</code></td>
+<td>小于则跳转，按无符号数理解</td>
+<td><code>CF = 1</code></td>
+<td>Jump if Below / Jump if Not Above or Equal</td>
+</tr>
+<tr>
+<td><code>JNB</code> / <code>JAE</code></td>
+<td>大于等于则跳转，按无符号数理解</td>
+<td><code>CF = 0</code></td>
+<td>Jump if Not Below / Jump if Above or Equal</td>
+</tr>
+<tr>
+<td><code>JBE</code> / <code>JNA</code></td>
+<td>小于等于则跳转，按无符号数理解</td>
+<td><code>CF = 1</code> 或 <code>ZF = 1</code></td>
+<td>Jump if Below or Equal / Jump if Not Above</td>
+</tr>
+<tr>
+<td><code>JNBE</code> / <code>JA</code></td>
+<td>大于则跳转，按无符号数理解</td>
+<td><code>CF = 0</code> 且 <code>ZF = 0</code></td>
+<td>Jump if Not Below or Equal / Jump if Above</td>
+</tr>
+<tr>
+<td><code>JL</code> / <code>JNGE</code></td>
+<td>小于则跳转，按有符号数理解</td>
+<td><code>SF != OF</code></td>
+<td>Jump if Less / Jump if Not Greater or Equal</td>
+</tr>
+<tr>
+<td><code>JNL</code> / <code>JGE</code></td>
+<td>大于等于则跳转，按有符号数理解</td>
+<td><code>SF = OF</code></td>
+<td>Jump if Not Less / Jump if Greater or Equal</td>
+</tr>
+<tr>
+<td><code>JLE</code> / <code>JNG</code></td>
+<td>小于等于则跳转，按有符号数理解</td>
+<td><code>ZF = 1</code> 或 <code>SF != OF</code></td>
+<td>Jump if Less or Equal / Jump if Not Greater</td>
+</tr>
+<tr>
+<td><code>JNLE</code> / <code>JG</code></td>
+<td>大于则跳转，按有符号数理解</td>
+<td><code>ZF = 0</code> 且 <code>SF = OF</code></td>
+<td>Jump if Not Less or Equal / Jump if Greater</td>
+</tr>
+</tbody>
+</table>
+<p>记忆时可以抓住两个重点：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">A / B 用于无符号比较
+G / L 用于有符号比较
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>相等判断则主要看：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">E / Z 表示相等或结果为零
+NE / NZ 表示不相等或结果不为零
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="11总结"><a id="11总结" class="anchor" aria-hidden="true" href="#11总结"><span class="octicon octicon-link"></span></a>11. 总结</h2>
+<p>JCC 条件跳转并不复杂，它的核心就是：</p>
+<ol>
+<li>前面的指令先设置标志位。</li>
+<li>JCC 根据标志位决定是否跳转。</li>
+<li><code>JE/JNE</code> 看是否相等。</li>
+<li><code>JA/JB</code> 这组用于无符号比较。</li>
+<li><code>JG/JL</code> 这组用于有符号比较。</li>
+</ol>
+<p>逆向时读 JCC，最重要的是把 <code>cmp/test + jcc + 跳转目标</code> 连起来看。只要能判断“跳转条件是什么”和“跳过去之后走哪条分支”，大部分 <code>if</code>、<code>else</code>、循环判断就能还原出大致逻辑。</p>
+</article><div class="post-copyright post-disclaimer"><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-info fa-fw"></i>免责声明: </span><span class="post-copyright-info">本站内容仅用于知识分享与安全研究交流。任何人不得将本文内容用于违法违规用途；由此产生的任何后果均与作者本人无关。请在合法授权环境中学习、验证与使用相关知识。</span></div></div><div class="tag_share"></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/08/08/mweb-17861622986083/" title="C 语言多维数组寻址原理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">C 语言多维数组寻址原理</div></div><div class="info-2"><div class="info-item-1"> 基本概述 在 C 语言里，数组不是一个抽象的“表格”，而是一段连续的内存。无论是一维数组、二维数组，还是三维数组，最终都会按照固定规则线性存放。理解这个规则之后，再看数组下标、指针偏移、反汇编中的地址计算，就会清晰很多。 这篇文章从一维数组开始，逐步推导二维、三维以及任意多维数组的寻址公式。 一维数组的内存模型 先看一个一维数组： int ary[5] = &#123;1, 2, 3, 4, 5&#125;;  如果 int 占 4 字节，那么这个数组在内存中是连续存放的： ary[0]  ary[1]  ary[2]  ary[3]  ary[4]   1       2       3       4       5  数组名 ary 在大多数表达式中会转换为首元素地址，也就是 &amp;ary[0]。访问第 n 个元素时，本质上是在首地址基础上偏移 n 个元素大小。 一维数组寻址公式 假设存在一个一维数组： type ary[M];  其中：  type 表示数组元素类型 M 表示数组元素个数 ary 表示数组首元素地址 n 表示目标元素下标  那么第 n 个元素的地址可...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/camer.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ decoding="async" loading="lazy"></div><div class="author-info-name">Camer</div><div class="author-info-description">专注研究网络安全、逆向分析、应急响应、代码编程、二进制研究</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">基本概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-jcc%E6%8C%87%E4%BB%A4%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">2.</span> <span class="toc-text">1. JCC 指令是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-jcc%E5%88%A4%E6%96%AD%E7%9A%84%E4%B8%8D%E6%98%AF%E5%8F%98%E9%87%8F%EF%BC%8C%E8%80%8C%E6%98%AF%E6%A0%87%E5%BF%97%E4%BD%8D"><span class="toc-number">3.</span> <span class="toc-text">2. JCC 判断的不是变量，而是标志位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-cmp%E5%92%8C-jcc%E7%9A%84%E9%98%85%E8%AF%BB%E6%96%B9%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">3. cmp 和 JCC 的阅读方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E6%9C%80%E5%B8%B8%E7%94%A8%E7%9A%84%E7%9B%B8%E7%AD%89%E5%88%A4%E6%96%AD"><span class="toc-number">5.</span> <span class="toc-text">4. 最常用的相等判断</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%E6%97%A0%E7%AC%A6%E5%8F%B7%E6%95%B0%E6%AF%94%E8%BE%83%EF%BC%9A%E7%9C%8B-a%E5%92%8C-b"><span class="toc-number">6.</span> <span class="toc-text">5. 无符号数比较：看 A 和 B</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E6%AF%94%E8%BE%83%EF%BC%9A%E7%9C%8B-g%E5%92%8C-l"><span class="toc-number">7.</span> <span class="toc-text">6. 有符号数比较：看 G 和 L</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7%E5%85%B6%E4%BB%96%E5%B8%B8%E8%A7%81%E8%B7%B3%E8%BD%AC"><span class="toc-number">8.</span> <span class="toc-text">7. 其他常见跳转</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8%E9%80%86%E5%90%91%E6%97%B6%E6%80%8E%E4%B9%88%E5%BF%AB%E9%80%9F%E5%88%A4%E6%96%AD%E5%88%86%E6%94%AF"><span class="toc-number">9.</span> <span class="toc-text">8. 逆向时怎么快速判断分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-test-reg-reg%E7%9A%84%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95"><span class="toc-number">10.</span> <span class="toc-text">9. test reg, reg 的常见用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10%E4%B8%80%E5%BC%A0%E9%80%9F%E6%9F%A5%E8%A1%A8"><span class="toc-number">11.</span> <span class="toc-text">10. 一张速查表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11%E6%80%BB%E7%BB%93"><span class="toc-number">12.</span> <span class="toc-text">11. 总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/09/mweb-17862731365786/" title="JCC 条件跳转指令入门">JCC 条件跳转指令入门</a><time datetime="2026-08-08T16:00:00.000Z" title="发表于 2026-08-09 00:00:00">2026-08-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/08/mweb-17861622986083/" title="C 语言多维数组寻址原理">C 语言多维数组寻址原理</a><time datetime="2026-08-07T16:00:00.000Z" title="发表于 2026-08-08 00:00:00">2026-08-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/07/mweb-17860876384530/" title="函数调用栈分析(32 位 x86/MSVC)">函数调用栈分析(32 位 x86/MSVC)</a><time datetime="2026-08-06T16:00:00.000Z" title="发表于 2026-08-07 00:00:00">2026-08-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/06/mweb-17860219086253/" title="vLLM 本地推理服务部署">vLLM 本地推理服务部署</a><time datetime="2026-08-05T16:00:00.000Z" title="发表于 2026-08-06 00:00:00">2026-08-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/05/mweb-17858899234672/" title="模型微调">模型微调</a><time datetime="2026-08-04T16:00:00.000Z" title="发表于 2026-08-05 00:00:00">2026-08-05</time></div></div></div></div></div></div><aside id="cam-right-widgets" class="cam-right-widgets aside-content"><div class="card-widget card-cam-calendar"><div class="item-headline"><i class="far fa-calendar-alt"></i><span>博客文章日历</span></div><div id="cam-calendar-card" class="cam-calendar-widget" data-static="true"><div class="cam-calendar-head"><span>2026 年 08 月</span><span>5 天有更新</span></div><div class="cam-calendar-week"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div><div class="cam-calendar-grid"><span class="cam-calendar-day is-empty"></span><span class="cam-calendar-day is-empty"></span><span class="cam-calendar-day is-empty"></span><span class="cam-calendar-day is-empty"></span><span class="cam-calendar-day is-empty"></span><span class="cam-calendar-day is-empty"></span><span class="cam-calendar-day" title="2026-08-01" data-count="0">1</span><span class="cam-calendar-day" title="2026-08-02" data-count="0">2</span><span class="cam-calendar-day" title="2026-08-03" data-count="0">3</span><span class="cam-calendar-day" title="2026-08-04" data-count="0">4</span><span class="cam-calendar-day has-posts" title="2026-08-05 发布 1 篇" data-count="1">5</span><span class="cam-calendar-day has-posts" title="2026-08-06 发布 1 篇" data-count="1">6</span><span class="cam-calendar-day has-posts" title="2026-08-07 发布 1 篇" data-count="1">7</span><span class="cam-calendar-day has-posts" title="2026-08-08 发布 1 篇" data-count="1">8</span><span class="cam-calendar-day has-posts" title="2026-08-09 发布 1 篇" data-count="1">9</span><span class="cam-calendar-day" title="2026-08-10" data-count="0">10</span><span class="cam-calendar-day" title="2026-08-11" data-count="0">11</span><span class="cam-calendar-day" title="2026-08-12" data-count="0">12</span><span class="cam-calendar-day" title="2026-08-13" data-count="0">13</span><span class="cam-calendar-day" title="2026-08-14" data-count="0">14</span><span class="cam-calendar-day" title="2026-08-15" data-count="0">15</span><span class="cam-calendar-day" title="2026-08-16" data-count="0">16</span><span class="cam-calendar-day" title="2026-08-17" data-count="0">17</span><span class="cam-calendar-day" title="2026-08-18" data-count="0">18</span><span class="cam-calendar-day" title="2026-08-19" data-count="0">19</span><span class="cam-calendar-day" title="2026-08-20" data-count="0">20</span><span class="cam-calendar-day" title="2026-08-21" data-count="0">21</span><span class="cam-calendar-day" title="2026-08-22" data-count="0">22</span><span class="cam-calendar-day" title="2026-08-23" data-count="0">23</span><span class="cam-calendar-day" title="2026-08-24" data-count="0">24</span><span class="cam-calendar-day" title="2026-08-25" data-count="0">25</span><span class="cam-calendar-day" title="2026-08-26" data-count="0">26</span><span class="cam-calendar-day" title="2026-08-27" data-count="0">27</span><span class="cam-calendar-day" title="2026-08-28" data-count="0">28</span><span class="cam-calendar-day" title="2026-08-29" data-count="0">29</span><span class="cam-calendar-day" title="2026-08-30" data-count="0">30</span><span class="cam-calendar-day" title="2026-08-31" data-count="0">31</span></div></div></div><div class="card-widget card-cam-hitokoto"><div class="item-headline"><i class="fas fa-quote-left"></i><span>每日一言</span></div><div class="cam-hitokoto-widget"><p id="cam-hitokoto-text">保持好奇，保持清醒。</p><div id="cam-hitokoto-from" class="cam-hitokoto-from">本地备用</div></div></div></aside></main><footer id="footer" style="background-image: url(/img/safe.webp?v=1);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2020 - 2026 By Camer</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.6.1"></script><script src="/js/main.js?v=5.6.1"></script><div class="js-pjax"><script>(() => {
+  const changeScriptToMath = article => {
+    article.querySelectorAll('script[type^="math/tex"]').forEach(el => {
+      const display = /mode=display/.test(el.type)
+      const node = document.createElement(display ? 'div' : 'span')
+      node.textContent = display
+        ? `$$${el.textContent}$$`
+        : `$${el.textContent}$`
+      el.parentNode.replaceChild(node, el)
+    })
+  }
+
+  const loadMathjax = () => {
+    const article = document.getElementById('article-container')
+    if (!article || article.querySelector('.hbe-container')) return
+    changeScriptToMath(article)
+
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem',
+            'ui/lazy'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          lazyMargin: '200px',
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.typesetClear()
+      MathJax.typesetPromise([ article ])
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.innerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+
+    setTimeout(() => URL.revokeObjectURL(url), 5000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    // Clean up previous event listeners and pending frames
+    if (wrap.__mermaidAbortController) {
+      wrap.__mermaidAbortController.abort()
+      if (wrap.__mermaidRafId) cancelAnimationFrame(wrap.__mermaidRafId)
+    }
+    const ac = new AbortController()
+    wrap.__mermaidAbortController = ac
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+    // Disable default gestures to prevent scroll chaining and pinch-zoom penetration in Chrome
+    svg.style.touchAction = 'none'
+
+    // Cache BoundingClientRect, throttled on scroll to reduce reflow
+    let cachedRect = svg.getBoundingClientRect()
+    let rectDirty = false
+    const markRectDirty = () => { rectDirty = true }
+    window.addEventListener('resize', markRectDirty, { signal: ac.signal })
+    window.addEventListener('scroll', markRectDirty, { signal: ac.signal, capture: true })
+    const getRect = () => {
+      if (rectDirty) {
+        cachedRect = svg.getBoundingClientRect()
+        rectDirty = false
+      }
+      return cachedRect
+    }
+
+    // Precompute clamp bounds from initial viewBox
+    const minW = initVb[2] * 0.1
+    const maxW = initVb[2] * 10
+    const minH = initVb[3] * 0.1
+    const maxH = initVb[3] * 10
+    const clampVb = vb => {
+      const out = vb.slice()
+      out[2] = clamp(out[2], minW, maxW)
+      out[3] = clamp(out[3], minH, maxH)
+      return out
+    }
+
+    // Throttle DOM updates using requestAnimationFrame
+    let pendingVb = null
+    let rafId = null
+    const applyVb = () => {
+      if (pendingVb) {
+        wrap.__mermaidCurViewBox = pendingVb
+        setSvgViewBox(svg, pendingVb)
+        pendingVb = null
+      }
+      rafId = null
+      wrap.__mermaidRafId = null
+    }
+    const setCurVb = vb => {
+      pendingVb = clampVb(vb)
+      if (!rafId) {
+        rafId = requestAnimationFrame(applyVb)
+        wrap.__mermaidRafId = rafId
+      }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      lastPointerX: 0,
+      lastPointerY: 0
+    }
+
+    const onPointerDown = e => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      const curVb = wrap.__mermaidCurViewBox
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+      if (state.pointers.size === 1) {
+        state.startVb = curVb.slice()
+        state.lastPointerX = e.clientX
+        state.lastPointerY = e.clientY
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = curVb.slice()
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+      const curVb = wrap.__mermaidCurViewBox
+      const rect = getRect()
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = state.pointers.values().next().value
+        const dxClient = p.x - state.lastPointerX
+        const dyClient = p.y - state.lastPointerY
+        state.lastPointerX = p.x
+        state.lastPointerY = p.y
+        const dx = dxClient * (curVb[2] / rect.width)
+        const dy = dyClient * (curVb[3] / rect.height)
+        setCurVb([curVb[0] - dx, curVb[1] - dy, curVb[2], curVb[3]])
+        return
+      }
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const px = curVb[0] + (cx - rect.left) * (curVb[2] / rect.width)
+        const py = curVb[1] + (cy - rect.top) * (curVb[3] / rect.height)
+        setCurVb(zoomAtPoint(state.startVb, factor, px, py))
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      // Release PointerCapture to avoid event capture anomalies
+      if (svg.hasPointerCapture && svg.hasPointerCapture(e.pointerId)) {
+        svg.releasePointerCapture(e.pointerId)
+      }
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+      } else if (state.pointers.size === 1) {
+        const p = state.pointers.values().next().value
+        state.lastPointerX = p.x
+        state.lastPointerY = p.y
+      }
+    }
+
+    const onWheel = e => {
+      // Prevent event bubbling from triggering external scroll
+      e.preventDefault()
+      e.stopPropagation()
+      // Normalize deltaY across deltaMode (Chrome uses pixels, Safari uses lines)
+      let delta = e.deltaY
+      if (e.deltaMode === 1) delta *= 16
+      else if (e.deltaMode === 2) delta *= 400
+
+      // Continuous zoom factor: smoother than fixed 1.1/0.9 steps
+      const zoomFactor = Math.pow(1.001, delta)
+
+      const curVb = wrap.__mermaidCurViewBox
+      const rect = getRect()
+      const px = curVb[0] + (e.clientX - rect.left) * (curVb[2] / rect.width)
+      const py = curVb[1] + (e.clientY - rect.top) * (curVb[3] / rect.height)
+      setCurVb(zoomAtPoint(curVb, zoomFactor, px, py))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (init) setCurVb(init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown, { signal: ac.signal })
+    svg.addEventListener('pointermove', onPointerMove, { signal: ac.signal })
+    svg.addEventListener('pointerup', onPointerUpOrCancel, { signal: ac.signal })
+    svg.addEventListener('pointercancel', onPointerUpOrCancel, { signal: ac.signal })
+    svg.addEventListener('wheel', onWheel, { passive: false, signal: ac.signal })
+    svg.addEventListener('dblclick', onDblClick, { signal: ac.signal })
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      // Clean up event listeners before removing old SVG
+      if (item.__mermaidAbortController) {
+        item.__mermaidAbortController.abort()
+      }
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      let config = {}
+      try {
+        config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      } catch (e) {
+        console.warn('[mermaid] failed to parse dataset.config:', e)
+      }
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (true) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (true) attachMermaidViewerButton(item)
+      }
+
+      const handleError = err => {
+        console.error(`[mermaid] render failed for block #${index}:`, err)
+        const errorEl = document.createElement('div')
+        errorEl.className = 'mermaid-error'
+        errorEl.textContent = `Mermaid render error: ${err.message || err}`
+        mermaidSrc.insertAdjacentElement('afterend', errorEl)
+      }
+
+      try {
+        const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+        // mermaid v9 and v10 compatibility
+        if (typeof renderFn === 'string') {
+          renderMermaid(renderFn)
+        } else {
+          renderFn.then(({ svg }) => renderMermaid(svg)).catch(handleError)
+        }
+      } catch (err) {
+        handleError(err)
+      }
+    })
+  }
+
+  const codeToMermaid = $article => {
+    const codeMermaidEle = $article.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    const $article = document.getElementById('article-container')
+    if (!$article) return
+
+    if (true) codeToMermaid($article)
+    const $mermaid = $article.querySelectorAll('.mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.16.0/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-clike.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-c.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-cpp.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-nasm.min.js" defer="defer"></script><script>document.addEventListener("DOMContentLoaded",function(){if(window.Prism&&Prism.languages.nasm&&!Prism.languages.asm){Prism.languages.asm=Prism.languages.nasm;Prism.languages.x86asm=Prism.languages.nasm;}},{once:true,capture:true});</script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-bash.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-python.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-json.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-ini.min.js" defer="defer"></script><script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.js" defer="defer"></script><script src="/js/profile-panel.js?v=13"></script><script src="/js/sidebar-widgets.js?v=7"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.6.1"></script></div></div></body></html>
