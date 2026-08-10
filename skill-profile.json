@@ -1,38 +1,38 @@
 {
-  "generatedAt": "2026-08-09T11:15:53.445Z",
+  "generatedAt": "2026-08-10T00:57:07.438Z",
   "totalPosts": 5,
   "totalTags": 4,
   "totalCategories": 2,
   "skills": [
     {
+      "name": "汇编基础",
+      "count": 2,
+      "score": 100
+    },
+    {
       "name": "部署",
       "count": 1,
-      "score": 100
+      "score": 50
     },
     {
       "name": "大模型",
       "count": 1,
-      "score": 100
-    },
-    {
-      "name": "汇编基础",
-      "count": 1,
-      "score": 100
+      "score": 50
     },
     {
       "name": "C语言",
       "count": 1,
-      "score": 100
+      "score": 50
     }
   ],
   "categories": [
     {
-      "name": "AI开发",
+      "name": "逆向",
       "count": 3,
       "score": 100
     },
     {
-      "name": "逆向",
+      "name": "AI开发",
       "count": 2,
       "score": 67
     }
