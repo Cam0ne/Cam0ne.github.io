@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-10T00:57:07.438Z",
-  "totalPosts": 5,
+  "generatedAt": "2026-08-10T09:14:06.953Z",
+  "totalPosts": 6,
   "totalTags": 4,
   "totalCategories": 2,
   "skills": [
@@ -28,13 +28,13 @@
   "categories": [
     {
       "name": "逆向",
-      "count": 3,
+      "count": 4,
       "score": 100
     },
     {
       "name": "AI开发",
       "count": 2,
-      "score": 67
+      "score": 50
     }
   ],
   "heatmap": [
@@ -57,12 +57,16 @@
     {
       "date": "2026-08-09",
       "count": 1
+    },
+    {
+      "date": "2026-08-10",
+      "count": 1
     }
   ],
   "months": [
     {
       "month": "2026-08",
-      "count": 5
+      "count": 6
     }
   ]
 }
