@@ -1,28 +1,28 @@
 {
-  "generatedAt": "2026-08-10T09:14:06.953Z",
+  "generatedAt": "2026-08-10T09:15:54.750Z",
   "totalPosts": 6,
   "totalTags": 4,
   "totalCategories": 2,
   "skills": [
     {
       "name": "汇编基础",
-      "count": 2,
+      "count": 3,
       "score": 100
     },
     {
       "name": "部署",
       "count": 1,
-      "score": 50
+      "score": 33
     },
     {
       "name": "大模型",
       "count": 1,
-      "score": 50
+      "score": 33
     },
     {
       "name": "C语言",
       "count": 1,
-      "score": 50
+      "score": 33
     }
   ],
   "categories": [
